@@ -11,7 +11,6 @@ public class E6_1_e {
             if(z%2==1)
                 s=s+z;
             num=num/10;
-
         }
         System.out.println("sum of the odd digits is : "+s);
     }
