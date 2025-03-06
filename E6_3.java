@@ -33,7 +33,7 @@ public class E6_3 {
                 vowelCount++;
             }
         }
-        System.out.println("Number of vowels: " + vowelCount);
+        System.out.println("Number of vowels : " + vowelCount);
 
         // e. Find positions of all vowels
         List<Integer> vowelPositions = new ArrayList<>();
