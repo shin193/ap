@@ -1,5 +1,3 @@
-package ex;
-
 import java.util.Scanner;
 
 public class E5_2 {
