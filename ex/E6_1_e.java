@@ -1,3 +1,5 @@
+package ex;
+
 import java.util.Scanner;
 
 public class E6_1_e {
