@@ -9,7 +9,7 @@ public class E6_2 {
         int i=-1;
         do {
             i++;
-            System.out.println("enter a number(press -1 to exit) : ");
+            System.out.println("enter a number(press -1 to exit): ");
             Scanner sc = new Scanner(System.in);
             num [i] = sc.nextInt();
         }
