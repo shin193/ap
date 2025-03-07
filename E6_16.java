@@ -7,7 +7,7 @@ public class E6_16 {
             for (int j = 1; j <11 ; j++) {
                 System.out.printf("%6d",i*j);
             }
-            System.out.print("\n");
+            System.out.println("");
         }
     }
 }
