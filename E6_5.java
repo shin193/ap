@@ -33,10 +33,10 @@ public class E6_5 {
         double average = (count == 0) ? 0 : sum / count;
         double range = (count == 0) ? 0 : largest - smallest;
 
-        System.out.println("Average: " + average);
-        System.out.println("Smallest: " + (count == 0 ? "NaN" : smallest));
-        System.out.println("Largest: " + (count == 0 ? "NaN" : largest));
-        System.out.println("Range: " + range);
+        System.out.println("average is: " + average);
+        System.out.println("smallest number is : " + (count == 0 ? " " : smallest));
+        System.out.println("largest number is : " + (count == 0 ? " " : largest));
+        System.out.println("range is : " + range);
 
         scanner.close();
     }
