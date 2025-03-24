@@ -5,7 +5,7 @@ import java.util.Scanner;
 public class EX2_PM_1_1 {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-        System.out.print("Enter a number : ");
+        System.out.print("Enter a number: ");
         int k = sc.nextInt();
         int size = k + 2;
         for (int i = 0; i < size; i++) {
