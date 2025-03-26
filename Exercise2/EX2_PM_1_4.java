@@ -28,7 +28,7 @@ public class EX2_PM_1_4 {
                 return;
             }
             default:{
-                System.out.println("Invalid action");
+                System.out.println("Invalid action ");
                 break;
             }
         }
