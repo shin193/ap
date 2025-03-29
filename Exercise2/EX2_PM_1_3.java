@@ -3,7 +3,7 @@ package Exercise2;
 import java.util.Scanner;
 import java.util.Random;
 
-public class EX3_PM_1_3 {
+public class EX2_PM_1_3 {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         System.out.print("Enter a number : ");
