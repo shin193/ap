@@ -1,16 +1,14 @@
-package Exercise2;
+package Exercise.Ex2;
 
-import java.util.Random;
 import java.util.Scanner;
 
-public class EX2_PM_1_5 {
+public class EX2_PM_2_1 {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         System.out.print("Enter grid size: ");
         int size = sc.nextInt();
 
         char[][] mat = new char[size][size];
-        Random rand = new Random();
         int x = size / 2, y = size / 2;
 
         for (int i = 0; i < size; i++)
@@ -25,11 +23,10 @@ public class EX2_PM_1_5 {
             }
             System.out.println();
 
-            int direction = rand.nextInt(4);
-            System.out.println("Direction: " + (direction == 0 ? "Up" : direction == 1 ? "Right" : direction == 2 ? "Down" : "Left"));
+            char input = sc.next().charAt(0);
 
-            int newX = x + (direction == 0 ? -1 : direction == 2 ? 1 : 0);
-            int newY = y + (direction == 3 ? -1 : direction == 1 ? 1 : 0);
+            int newX = x + (input == 'w' ? -1 : input == 's' ? 1 : 0);
+            int newY = y + (input == 'a' ? -1 : input == 'd' ? 1 : 0);
 
             if (mat[newX][newY] != '*') {
                 mat[x][y] = ' ';
@@ -38,9 +35,10 @@ public class EX2_PM_1_5 {
                 mat[x][y] = 'X';
             } else {
                 System.out.println("Hitting the game wall!");
+                return;
             }
 
-            try { Thread.sleep(1000); } catch (InterruptedException e) {}
+            try { Thread.sleep(100); } catch (InterruptedException e) {}
         }
     }
 }
