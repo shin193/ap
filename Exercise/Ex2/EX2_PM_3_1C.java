@@ -1,4 +1,4 @@
-package Exercise.Ex2_third_part;
+package Exercise.Ex2;
 
 import javax.swing.*;
 import java.awt.*;
