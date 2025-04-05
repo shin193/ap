@@ -1,4 +1,4 @@
-package Exercise.Ex3;
+package Exercise.Ex2_third_part;
 
 import javax.swing.*;
 import java.awt.*;
@@ -6,8 +6,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.Random;
 
-
-public class EX2_PM_3_1C extends JFrame implements KeyListener {
+public class EX2_PM_3_1D extends JFrame implements KeyListener {
 
     Point pacmanPoint = new Point();
     final int width = 300, height = 300, boxSize = 5;
@@ -15,12 +14,16 @@ public class EX2_PM_3_1C extends JFrame implements KeyListener {
     final int LEFT = 1, RIGHT = 2, TOP = 3, BOTTOM = 4;
     Point dotPoint = new Point();
     int score = 0;
+    final int maxScore = 5;
+    final long maxTime = 60_000;
+    long startTime;
 
-    public EX2_PM_3_1C() {
+    public EX2_PM_3_1D() {
         addKeyListener(this);
         pacmanPoint.setLocation((width / boxSize) / 2, (height / boxSize) / 2);
         getNewDotPointLocation();
         setSize(width, height);
+        startTime = System.currentTimeMillis();
     }
 
     @Override
@@ -51,11 +54,25 @@ public class EX2_PM_3_1C extends JFrame implements KeyListener {
     }
 
     private void logic() {
+        long currentTime = System.currentTimeMillis();
+        long elapsed = currentTime - startTime;
+
+        if (elapsed > maxTime) {
+            JOptionPane.showMessageDialog(this, "Time's up!");
+            System.exit(0);
+        }
+
+        if (score >= maxScore) {
+            JOptionPane.showMessageDialog(this, "Congratulations! You've completed the game.");
+            System.exit(0);
+        }
+
         if (dotPoint.x == pacmanPoint.x && dotPoint.y == pacmanPoint.y) {
             score++;
             System.out.println("Score: " + score);
             getNewDotPointLocation();
         }
+
         movePacman();
     }
 
@@ -139,7 +156,7 @@ public class EX2_PM_3_1C extends JFrame implements KeyListener {
     }
 
     public static void main(String[] args) {
-        EX2_PM_3_1C frame = new EX2_PM_3_1C();
+        EX2_PM_3_1D frame = new EX2_PM_3_1D();
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
