@@ -1,3 +1,5 @@
+package Exercise.Ex1;
+
 import java.util.*;
 
 public class E6_3 {

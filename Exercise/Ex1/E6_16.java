@@ -1,4 +1,4 @@
-import java.util.Scanner;
+package Exercise.Ex1;
 
 public class E6_16 {
     public static void main(String[] args) {

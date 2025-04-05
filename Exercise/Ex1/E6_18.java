@@ -1,3 +1,5 @@
+package Exercise.Ex1;
+
 import java.util.Scanner;
 
 public class E6_18 {
