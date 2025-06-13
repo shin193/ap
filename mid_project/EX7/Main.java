@@ -1,16 +1,18 @@
-package mid_project.part_1;
+package mid_project.EX7;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
-
-import static mid_project.part_1.LibraryFileHandler.loadLibraryFromFile;
 
 public class Main {
     static Scanner scanner = new Scanner(System.in);
+    private static StorageHandler storageHandler;
+
     public static void main(String[] args) {
-        Library library = loadLibraryFromFile();
+        Config.loadConfig();
+        setupStorageHandler();
+
+        Library library = storageHandler.loadLibrary();
+
         String choice;
         while (true) {
             System.out.println("\t\t\t  *=============================================================================*");
@@ -20,7 +22,7 @@ public class Main {
             System.out.println("\t\t\t\t\t\t\t\t\t\t\t\t\t5)Exit");
             System.out.println("\t\t\t  *=============================================================================*");
             System.out.print("\tChoose an option: ");
-            choice= scanner.nextLine();
+            choice = scanner.nextLine();
             switch (choice) {
                 case "1":
                     Student studentL = login(library);
@@ -29,33 +31,50 @@ public class Main {
                     }
                     break;
                 case "2":
-                    Student studentR=register(library);
+                    Student studentR = register(library);
                     Menu.showStudentMenu(library, studentR);
                     break;
                 case "3":
-                    Manager manager =loginManager(library);
+                    Manager manager = loginManager(library);
                     if (manager != null) {
                         Menu.showManagerMenu(library);
                     }
                     break;
                 case "4":
-                   Librarian librarian=loginLibrarian(library);
-                   if (librarian != null) {
-                       Menu.showLibrarianMenu(librarian, library);
-                   }
-                   break;
+                    Librarian librarian = loginLibrarian(library);
+                    if (librarian != null) {
+                        Menu.showLibrarianMenu(librarian, library);
+                    }
+                    break;
                 case "5":
-                    LibraryFileHandler.saveLibraryToFile(library);
-                    System.out.println("Library saved!.Good bye!");
+                    storageHandler.saveLibrary(library);
+                    System.out.println("Library saved! Good bye!");
                     return;
                 default:
                     System.out.println("Invalid choice");
                     break;
             }
-
         }
-
     }
+
+    private static void setupStorageHandler() {
+        switch (Config.getStorageType()) {
+            case "json":
+                storageHandler = new JsonStorageHandler();
+                System.out.println("Using JSON storage");
+                break;
+            case "sqlite":
+                storageHandler = new SqliteStorageHandler();
+                System.out.println("Using SQLite storage");
+                break;
+            case "tabsplit":
+            default:
+                storageHandler = new TabSplitStorageHandler();
+                System.out.println("Using tab-split storage");
+                break;
+        }
+    }
+
     private static Student login (Library library) {
         System.out.println("enter your password: ");
         String password= scanner.nextLine();
@@ -112,11 +131,5 @@ public class Main {
         }
         System.out.println("wrong employee id , please try again");
         return null;
-    }
-    private static void showListOfBooks(Library library) {
-        System.out.println("list of books: ");
-        for (Book book : library.getBooks()) {
-            System.out.println(book.getTitle());
-        }
     }
 }

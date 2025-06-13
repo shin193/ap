@@ -1,4 +1,4 @@
-package mid_project.part_1;
+package mid_project.EX7;
 
 import java.time.LocalDate;
 

@@ -1,4 +1,4 @@
-package mid_project.part_1;
+package mid_project.EX7;
 
 public class Manager {
     private final String firstName;

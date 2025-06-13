@@ -1,10 +1,13 @@
-package mid_project.part_1;
+package mid_project.EX7;
+
+import java.util.Scanner;
 
 public class Book{
     private String title;
     private String author;
     private int publishDate;
     private int bookPage;
+    static Scanner scanner = new Scanner(System.in);
     public Book(String title, String author, int publishDate, int bookPage) {
         this.title = title;
         this.author = author;
@@ -26,5 +29,4 @@ public class Book{
     public String toString() {
         return "title: " + title + ", author: " + author + ", publishDate: " + publishDate + ", bookPage: " + bookPage;
     }
-
 }
