@@ -32,6 +32,7 @@ public class MenuHandler {
                     handleStudentRegistration();
                     break;
                 case 2:
+                    // PART_2
                     handleStudentLogin();
                     break;
                 case 3:
