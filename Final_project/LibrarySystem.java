@@ -1,7 +1,6 @@
 package Final_project;
 
 import java.util.List;
-import java.util.Scanner;
 
 public class LibrarySystem {
     private StudentManager studentManager;
@@ -17,6 +16,7 @@ public class LibrarySystem {
     public int getStudentCount() {
         return this.studentManager.getStudentCount();
     }
+    public int getBookCount() {return this.bookManager.getNumberOfBooks();}
 
     public void registerStudent(String name, String studentId, String username, String password) {
         studentManager.registerStudent(name, studentId, username, password);
@@ -24,6 +24,9 @@ public class LibrarySystem {
 
     public Student authenticateStudent(String username, String password) {
         return studentManager.authenticateStudent(username, password);
+    }
+    public void editStudentInfo(Student currentUser){
+        studentManager.editStudentInformation(currentUser);
     }
     public void addBook(String title, String id, String author) {
         bookManager.addBook(title, id, author);
@@ -63,46 +66,4 @@ public class LibrarySystem {
         system.start();
     }
 
-    public void editStudentInformation(Student currentUser) {
-        System.out.println("What would you like to edit?");
-        System.out.println("1. Name");
-        System.out.println("2. Username");
-        System.out.println("3. Password");
-        System.out.println("4. Student ID");
-
-        String choice = menuHandler.getScanner().nextLine();
-
-        if (choice.equals("1")) {
-            System.out.println("Enter your new name: ");
-            String newName = menuHandler.getScanner().nextLine();
-            currentUser.setName(newName);
-            System.out.println("Your name has been edited.");
-        }
-        else if (choice.equals("2")) {
-            System.out.println("Enter your new username: ");
-            String newUsername = menuHandler.getScanner().nextLine();
-            if (studentManager.isUsernameTaken(newUsername)){
-                System.out.println("That username is already taken. try again.");
-            }
-            else {
-                currentUser.setUsername(newUsername);
-                System.out.println("Your username has been edited.");
-            }
-        }
-        else if (choice.equals("3")) {
-            System.out.println("Enter your new password: ");
-            String newPassword = menuHandler.getScanner().nextLine();
-            currentUser.setPassword(newPassword);
-            System.out.println("Your password has been edited.");
-        }
-        else if (choice.equals("4")) {
-            System.out.println("Enter your new student ID: ");
-            String newStudentID = menuHandler.getScanner().nextLine();
-            currentUser.setStudentId(newStudentID);
-            System.out.println("Your student ID has been edited.");
-        }
-        else {
-            System.out.println("Invalid action!");
-        }
-    }
 }

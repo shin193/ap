@@ -72,4 +72,5 @@ public class BookManager {
     private boolean isBookIdTaken(String id) {
         return books.stream().anyMatch(b -> b.getId().equals(id));
     }
+    public int getNumberOfBooks() { return books.size(); }
 }

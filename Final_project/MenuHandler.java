@@ -18,30 +18,33 @@ public class MenuHandler {
     public void displayMainMenu() {
         while (true) {
             System.out.println("\n=== University Library Management System ===");
-            System.out.println("1. Student Registration");
-            System.out.println("2. Student Login");
-            System.out.println("3. Manager login");
-            System.out.println("4. librarian login");
-            System.out.println("5. Exit");
+            System.out.println("1. login as a guest");
+            System.out.println("2. Student Registration");
+            System.out.println("3. Student Login");
+            System.out.println("4. Manager login");
+            System.out.println("5. librarian login");
+            System.out.println("6. Exit");
             System.out.print("Please enter your choice: ");
 
-            int choice = getIntInput(1, 6);
+            int choice = getIntInput(1, 7);
 
             switch (choice) {
                 case 1:
-                    handleStudentRegistration();
+                    displayGuestLogin();
                     break;
                 case 2:
-                    // PART_2
-                    handleStudentLogin();
+                    handleStudentRegistration();
                     break;
                 case 3:
-                    //
+                    handleStudentLogin();
                     break;
                 case 4:
                     //
                     break;
                 case 5:
+                    //
+                    break;
+                case 6:
                     System.out.println("Exiting system. Goodbye!");
                     return;
                 default:
@@ -93,6 +96,44 @@ public class MenuHandler {
         }
     }
 
+    private void displayGuestLogin() {
+        while (true){
+            System.out.println("\n=== Guest User ===");
+            System.out.println("1. View total student count");
+            System.out.println("2. view total book count");
+            System.out.println("3. Search for a book");
+            System.out.println("4. View loans count");
+            System.out.println("5. Exit to main menu");
+
+            String action = scanner.nextLine();
+            switch (action) {
+                case "1":
+                    //FPR_2-1
+                    displayStudentCount();
+                    break;
+                case "2":
+                    displayBookCount();
+                    break;
+                case "3":
+                    //empty
+                    break;
+                case "4":
+                    //empty
+                    break;
+                case "5":
+                    return;
+                default:
+                    System.out.println("Invalid action! Please try again.");
+            }
+
+        }
+    }
+
+    private void displayBookCount() {
+        int bookCount = librarySystem.getBookCount();
+        System.out.println("\nTotal books are : " + bookCount);
+    }
+
     private void displayLoggedInStudentMenu() {
         while (currentUser != null) {
             System.out.println("\n=== Student Dashboard ===");
@@ -112,7 +153,7 @@ public class MenuHandler {
                     System.out.println(currentUser);
                     break;
                 case 2:
-                    librarySystem.editStudentInformation(currentUser);
+                    librarySystem.editStudentInfo(currentUser);
                     break;
                 case 3:
                     librarySystem.borrowBook(currentUser);
