@@ -108,7 +108,6 @@ public class MenuHandler {
             String action = scanner.nextLine();
             switch (action) {
                 case "1":
-                    //FPR_2-1
                     displayStudentCount();
                     break;
                 case "2":
@@ -139,14 +138,15 @@ public class MenuHandler {
             System.out.println("\n=== Student Dashboard ===");
             System.out.println("1. View My Information");
             System.out.println("2. Edit My Information");
-            System.out.println("3. Search for a book");
-            System.out.println("4. Borrow a Book");
-            System.out.println("5. Return a Book");
-            System.out.println("6. View Available Books");
-            System.out.println("7. Logout");
-            System.out.print("Please enter your choice: ");
+            System.out.println("3. Search For a Book");
+            System.out.println("4. Request To Borrow Book");
+            System.out.println("5. Check My Borrow Status");
+            System.out.println("6. Return a Book");
+            System.out.println("7. View Available Books");
+            System.out.println("8. Logout");
+            System.out.print("Please Enter Your Choice: ");
 
-            int choice = getIntInput(1, 7);
+            int choice = getIntInput(1, 8);
 
             switch (choice) {
                 case 1:
@@ -157,19 +157,22 @@ public class MenuHandler {
                     librarySystem.editStudentInfo(currentUser);
                     break;
                 case 3:
-                    //FPR_1-3
                     librarySystem.searchBooks();
                     break;
                 case 4:
-                    librarySystem.borrowBook(currentUser);
+                    // FPR_1-4
+                    librarySystem.requestBorrowBook(currentUser);
                     break;
                 case 5:
-                    librarySystem.returnBook(currentUser);
+                    // //
                     break;
                 case 6:
-                    librarySystem.displayAvailableBooks();
+                    librarySystem.returnBook(currentUser);
                     break;
                 case 7:
+                    librarySystem.displayAvailableBooks();
+                    break;
+                case 8:
                     currentUser = null;
                     System.out.println("Logged out successfully.");
                     return;

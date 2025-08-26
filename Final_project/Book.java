@@ -12,6 +12,9 @@ public class Book implements Serializable {
     private LocalDate borrowStartDate;
     private LocalDate borrowEndDate;
     private String borrowedByStudentId;
+    private boolean borrowRequested;
+    private String requestedByStudentId;
+    private int borrowDays;
 
     public Book(String title, String id, String author , int publisher) {
         this.title = title;
@@ -22,6 +25,31 @@ public class Book implements Serializable {
         this.borrowStartDate = null;
         this.borrowEndDate = null;
         this.borrowedByStudentId = null;
+        this.borrowRequested = false;
+        this.requestedByStudentId = null;
+        this.borrowDays = 0;
+    }
+    public boolean isBorrowRequested() { return borrowRequested; }
+    public void setBorrowRequested(boolean borrowRequested , String studentId , int borrowDays) { this.borrowRequested = borrowRequested;
+    this.requestedByStudentId = studentId; this.borrowDays = borrowDays; isAvailable = false;}
+
+    public void approveBorrowRequest(int borrowDays) {
+        borrowStartDate = LocalDate.now();
+        borrowEndDate = LocalDate.now().plusDays(borrowDays);
+        this.borrowedByStudentId = this.requestedByStudentId;
+        this.borrowRequested = false;
+        this.requestedByStudentId = null;
+        isAvailable = false;
+    }
+
+    public void rejectBorrowRequest() {
+        this.borrowRequested = false;
+        this.requestedByStudentId = null;
+    }
+
+
+    public String getRequestedByStudentId() {
+        return requestedByStudentId;
     }
     public String getTitle() {
         return title;
@@ -68,7 +96,7 @@ public class Book implements Serializable {
 
     @Override
     public String toString() {
-        String status = isAvailable ? "Available" : "Not Available , Borrowed by " + borrowedByStudentId + "from " + borrowStartDate + " to " + borrowEndDate;
+        String status = isAvailable ? "Available\n*===================*" : "Not Available , Borrowed by " + borrowedByStudentId + "from " + borrowStartDate + " to " + borrowEndDate;
 
         return "---title : " + title + "\n---id :" + id + "\n---author :" + author + "\n---status :" + status;
     }

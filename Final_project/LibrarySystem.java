@@ -5,11 +5,13 @@ import java.util.List;
 public class LibrarySystem {
     private StudentManager studentManager;
     private BookManager bookManager;
+    private LibrarianManager librarianManager;
     private MenuHandler menuHandler;
 
     public LibrarySystem() {
         this.studentManager = new StudentManager();
         this.bookManager = new BookManager();
+        this.librarianManager = new LibrarianManager();
         this.menuHandler = new MenuHandler(this);
     }
 
@@ -43,7 +45,7 @@ public class LibrarySystem {
             System.out.println(book);
         }
     }
-    // // // FPR_1-3
+
     public void searchBooks() {
         System.out.println("\n--- Search Books ---");
         System.out.println("1 >> search by title");
@@ -110,16 +112,25 @@ public class LibrarySystem {
         }
     }
 
-    public void borrowBook(Student student) {
-        System.out.print("Enter book ID to borrow: ");
+    public void requestBorrowBook(Student student) {
+        System.out.print("Enter book ID to request: ");
         String bookId = menuHandler.getScanner().nextLine();
-        bookManager.borrowBook(bookId, student);
+
+        bookManager.requestBorrow(bookId, student);
     }
 
     public void returnBook(Student student) {
         System.out.print("Enter book ID to return: ");
         String bookId = menuHandler.getScanner().nextLine();
         bookManager.returnBook(bookId);
+    }
+
+    public Librarian authenticateLibrarian(String username, String password) {
+        return librarianManager.authenticateLibrarian(username, password);
+    }
+
+    public void addLibrarian(String username, String password, String name) {
+        librarianManager.addLibrarian(username, password, name);
     }
 
     public void start() {

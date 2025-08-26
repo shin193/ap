@@ -46,5 +46,24 @@ public class FileHandling {
             return new ArrayList<>();
         }
     }
+    public static void saveLibrarians( List<Librarian> librarians ) {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("librarians.dat"))) {
+            oos.writeObject(librarians);
+        } catch (IOException e) {
+            System.out.println("Error saving librarians: " + e.getMessage());
+        }
+    }
+    public static List<Librarian> loadLibrarians() {
+        File file = new File("librarians.dat");
+        if (!file.exists()) {
+            return new ArrayList<>();
+        }
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream("librarians.dat"))) {
+            return (List<Librarian>) ois.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            System.out.println("Error loading librarians: " + e.getMessage());
+            return new ArrayList<>();
+        }
+    }
 
 }

@@ -1,15 +1,35 @@
 package Final_project;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class BookManager {
     private List<Book> books = new ArrayList<>();
+    private Map<String, Book> bookMapID = new HashMap<>();
     private Scanner scanner = new Scanner(System.in);
 
     public BookManager() {
         this.books = FileHandling.loadDataBk();
+        if (books.isEmpty()) {
+            addDefaultBooks();
+        }
+        initializeMaps();
+    }
+
+    private void initializeMaps() {
+        for (Book book : books) {
+            bookMapID.put(book.getId(), book);
+        }
+    }
+
+    private void addDefaultBooks() {
+        Book book1 = new Book("Book 1", "0001", "author1", 2000);
+        bookMapID.put("0001", book1);
+        Book book2 = new Book("Book 2", "0002", "author2", 2001);
+        bookMapID.put("0002", book2);
+
+        books.add(book1);
+        books.add(book2);
+        FileHandling.saveDataBk(books);
     }
 
     public List<Book> searchBooks(String title, String author, Integer publicationYear) {
@@ -48,6 +68,7 @@ public class BookManager {
         }
 
         Book newBook = new Book(title, id, author , year);
+        bookMapID.put(id, newBook);
         books.add(newBook);
         FileHandling.saveDataBk(books);
         System.out.println("Book added successfully.");
@@ -64,25 +85,30 @@ public class BookManager {
     }
 
     public Book findBookById(String id) {
-        return books.stream()
-                .filter(b -> b.getId().equals(id))
-                .findFirst()
-                .orElse(null);
+        return bookMapID.get(id);
     }
 
-    public void borrowBook(String bookId, Student student) {
+    public void requestBorrow(String bookId, Student student) {
         Book book = findBookById(bookId);
         if (book == null) {
             System.out.println("Book not found.");
             return;
         }
         if (!book.isAvailable()) {
-            System.out.println("Book is not available for borrowing.");
+            System.out.println("Book is not available.");
             return;
         }
-        book.setAvailable(false);
+        System.out.println("How many days do you want to borrow the book?");
+        int days;
+        try {
+            days = scanner.nextInt();
+        }catch (InputMismatchException e) {
+            System.out.println("Please enter an number.");
+            return;
+        }
+        book.setBorrowRequested(true , student.getStudentId(), days);
         FileHandling.saveDataBk(books);
-        System.out.println("Book borrowed successfully by " + student.getName());
+        System.out.println("Book requested successfully by " + student.getName());
     }
 
     public void returnBook(String bookId) {
@@ -101,7 +127,7 @@ public class BookManager {
     }
 
     private boolean isBookIdTaken(String id) {
-        return books.stream().anyMatch(b -> b.getId().equals(id));
+        return bookMapID.containsKey(id);
     }
     public int getNumberOfBooks() { return books.size(); }
 }
