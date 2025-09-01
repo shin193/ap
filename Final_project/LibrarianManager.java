@@ -3,15 +3,18 @@ package Final_project;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public class LibrarianManager {
     private List<Librarian> librarians = new ArrayList<>();
+    private Scanner sc;
 
     public LibrarianManager() {
         this.librarians = FileHandling.loadLibrarians();
         if (librarians.isEmpty()) {
             addDefaultLibrarian();
         }
+        sc = new Scanner(System.in);
     }
 
 
@@ -41,5 +44,13 @@ public class LibrarianManager {
 
     private boolean isUsernameTaken(String username) {
         return librarians.stream().anyMatch(l -> l.getUsername().equals(username));
+    }
+
+    public void editLibrarianPassword(Librarian currentlibrarian) {
+        System.out.println("Enter your new password: ");
+        String newPassword = sc.nextLine();
+        currentlibrarian.setPassword(newPassword);
+        FileHandling.saveLibrarians(librarians);
+        System.out.println("Your password has been changed.");
     }
 }

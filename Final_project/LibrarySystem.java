@@ -128,6 +128,9 @@ public class LibrarySystem {
     public Librarian authenticateLibrarian(String username, String password) {
         return librarianManager.authenticateLibrarian(username, password);
     }
+    public void editLibrarianPassword(Librarian currentlibrarian) {
+        librarianManager.editLibrarianPassword(currentlibrarian);
+    }
 
     public void addLibrarian(String username, String password, String name) {
         librarianManager.addLibrarian(username, password, name);

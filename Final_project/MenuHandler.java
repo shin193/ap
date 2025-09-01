@@ -6,11 +6,13 @@ public class MenuHandler {
     private Scanner scanner;
     private LibrarySystem librarySystem;
     private Student currentUser;
+    private Librarian currentLibrarian;
 
     public MenuHandler(LibrarySystem librarySystem) {
         this.scanner = new Scanner(System.in);
         this.librarySystem = librarySystem;
         this.currentUser = null;
+        this.currentLibrarian = null;
     }
     public Scanner getScanner() {
         return this.scanner;
@@ -42,7 +44,8 @@ public class MenuHandler {
                     //
                     break;
                 case 5:
-                    //
+                    //FPR_3-1
+                    handleLibrarianLogin();
                     break;
                 case 6:
                     System.out.println("Exiting system. Goodbye!");
@@ -160,7 +163,6 @@ public class MenuHandler {
                     librarySystem.searchBooks();
                     break;
                 case 4:
-                    // FPR_1-4
                     librarySystem.requestBorrowBook(currentUser);
                     break;
                 case 5:
@@ -179,6 +181,70 @@ public class MenuHandler {
                 default:
                     System.out.println("Invalid option! Please try again.");
             }
+        }
+    }
+
+    private void handleLibrarianLogin() {
+        System.out.println("Please Enter Your Username: ");
+        String username = scanner.nextLine();
+        System.out.println("Please Enter Your Password: ");
+        String password = scanner.nextLine();
+        currentLibrarian = librarySystem.authenticateLibrarian(username, password);
+        if (currentLibrarian != null) {
+            System.out.println("Login successful! Welcome, " + currentLibrarian.getName());
+            displayLoggedInLibrarianMenu();
+        }
+        else {
+            System.out.println("Invalid username or password. Please try again.");
+        }
+    }
+
+    private void displayLoggedInLibrarianMenu() {
+        while (true){
+            System.out.println("\n=== Librarian Menu ===");
+            System.out.println("1. View My Information");
+            System.out.println("2. Edit My Password");
+            System.out.println("3. Add A New Book To the Library");
+            System.out.println("4. Search For A Book");
+            System.out.println("5. View Available Books");
+            System.out.println("6. Edit Book Information");
+            System.out.println("7. Accept Borrow Requests");
+            System.out.println("8. Logout");
+            System.out.print("Please Enter Your Choice: ");
+            int choice = getIntInput(1, 8);
+
+            switch (choice) {
+                case 1:
+                    System.out.println("\n--- My Information ---");
+                    System.out.println(currentLibrarian);
+                    break;
+                case 2:
+                    //
+                    break;
+                case 3:
+                    //
+                    break;
+                case 4:
+                    //
+                    break;
+                case 5:
+                    //
+                    break;
+                case 6:
+                    //
+                    break;
+                case 7:
+                    //
+                    break;
+                case 8:
+                    currentLibrarian = null;
+                    System.out.println("Logged out successfully.");
+                    return;
+                default:
+                    System.out.println("Invalid option!");
+                    break;
+            }
+
         }
     }
 
