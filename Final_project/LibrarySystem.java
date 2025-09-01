@@ -54,6 +54,12 @@ public class LibrarySystem {
         }
     }
 
+    public void displayAllBooks() {
+        for (Book book : bookManager.getAllBooks()){
+            System.out.println(book);
+        }
+    }
+
     public void searchBooks() {
         System.out.println("\n--- Search Books ---");
         System.out.println("1 >> search by title");
@@ -118,6 +124,11 @@ public class LibrarySystem {
                 System.out.println(book);
             }
         }
+    }
+    public void editBookInfo() {
+        System.out.println("Enter The Book ID to edit: ");
+        String bookId = menuHandler.getScanner().nextLine();
+        bookManager.editBookInfo(bookId);
     }
 
     public void requestBorrowBook(Student student) {

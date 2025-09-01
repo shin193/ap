@@ -4,10 +4,10 @@ import java.io.Serializable;
 import java.time.LocalDate;
 
 public class Book implements Serializable {
-    private final String title;
-    private final String id;
-    private final String author;
-    private final int publishYear;
+    private String title;
+    private String id;
+    private String author;
+    private int publishYear;
     private boolean isAvailable;
     private LocalDate borrowStartDate;
     private LocalDate borrowEndDate;
@@ -54,14 +54,26 @@ public class Book implements Serializable {
     public String getTitle() {
         return title;
     }
+    public void setTitle(String title) {
+        this.title = title;
+    }
     public String getId() {
         return id;
+    }
+    public void setId(String id) {
+        this.id = id;
     }
     public String getAuthor() {
         return author;
     }
+    public void setAuthor(String author) {
+        this.author = author;
+    }
     public int getPublishYear() {
         return publishYear ;
+    }
+    public void setPublishYear(int publishYear) {
+        this.publishYear = publishYear;
     }
     public boolean isAvailable() {
         return isAvailable;
@@ -96,9 +108,20 @@ public class Book implements Serializable {
 
     @Override
     public String toString() {
-        String status = isAvailable ? "Available\n*===================*" : "Not Available , Borrowed by " + borrowedByStudentId + "from " + borrowStartDate + " to " + borrowEndDate;
+        String status;
+        if (!isAvailable) {
+            if (borrowStartDate == null) {
+                status = "Requested by Student Id : "+getRequestedByStudentId();
+            }
+            else {
+                status= "Not Available , Borrowed by " + borrowedByStudentId + "from " + borrowStartDate + " to " + borrowEndDate;
+            }
+        }
+        else {
+            status = "Available";
+        }
 
-        return "---title : " + title + "\n---id :" + id + "\n---author :" + author + "\n---status :" + status;
+        return "---title : " + title + "\n---id :" + id + "\n---author :" + author + "\n---status :" + status+"\n*=========================*";
     }
 
 }

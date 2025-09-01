@@ -205,7 +205,7 @@ public class MenuHandler {
             System.out.println("2. Edit My Password");
             System.out.println("3. Add A New Book To the Library");
             System.out.println("4. Search For A Book");
-            System.out.println("5. View Available Books");
+            System.out.println("5. View All Books With Borrow Status");
             System.out.println("6. Edit Book Information");
             System.out.println("7. Accept Borrow Requests");
             System.out.println("8. Logout");
@@ -221,17 +221,19 @@ public class MenuHandler {
                     librarySystem.editLibrarianPassword(currentLibrarian);
                     break;
                 case 3:
-                    // FPR_3-3
                     librarySystem.addBook();
                     break;
                 case 4:
-                    //
+                    // FPR_3-4
+                    librarySystem.searchBooks();
                     break;
                 case 5:
-                    //
+                    // FPR_3-4
+                    librarySystem.displayAllBooks();
                     break;
                 case 6:
-                    //
+                    // FPR_3-4
+                    librarySystem.editBookInfo();
                     break;
                 case 7:
                     //

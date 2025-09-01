@@ -74,6 +74,55 @@ public class BookManager {
         System.out.println("Book added successfully.");
     }
 
+    public void editBookInfo(String bookId) {
+        Book book = findBookById(bookId);
+        if (book == null) {
+            System.out.println("Book with ID " + bookId + " not found.");
+            return;
+        }
+
+        System.out.println("Editing book: " + book.getTitle());
+        System.out.println("1. Edit title");
+        System.out.println("2. Edit author");
+        System.out.println("3. Edit publication year");
+        System.out.print("Choose an option: ");
+
+        String choice = scanner.nextLine();
+        switch (choice) {
+                case "1":
+                    System.out.print("Enter new title: ");
+                    String newTitle = scanner.nextLine();
+                    if (newTitle.trim().isEmpty()) {
+                        System.out.println("Title cannot be empty!");
+                        return;
+                    }
+                    book.setTitle(newTitle);
+                    break;
+                case "2":
+                    System.out.print("Enter new author: ");
+                    String newAuthor = scanner.nextLine();
+                    if (newAuthor.trim().isEmpty()) {
+                        System.out.println("Author cannot be empty!");
+                    }
+                    book.setAuthor(newAuthor);
+                    break;
+                case "3":
+                    System.out.print("Enter new publication year: ");
+                    String newYear = scanner.nextLine();
+                    if (newYear.trim().isEmpty()) {
+                        System.out.println("Publication year cannot be empty!");
+                        return;
+                    }
+                    book.setPublishYear(Integer.parseInt(newYear));
+                    break;
+                default:
+                    System.out.println("Invalid option.");
+                    return;
+            }
+        FileHandling.saveDataBk(books);
+        System.out.println("Book edited successfully.");
+    }
+
     public List<Book> getAvailableBooks() {
         List<Book> availableBooks = new ArrayList<>();
         for (Book book : books) {
@@ -130,4 +179,10 @@ public class BookManager {
         return bookMapID.containsKey(id);
     }
     public int getNumberOfBooks() { return books.size(); }
+
+    public List<Book> getAllBooks() {
+        System.out.println("\n******* All Books *******");
+        return books;
+    }
+
 }
