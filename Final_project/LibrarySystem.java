@@ -30,7 +30,15 @@ public class LibrarySystem {
     public void editStudentInfo(Student currentUser){
         studentManager.editStudentInformation(currentUser);
     }
-    public void addBook(String title, String id, String author ,int year) {
+    public void addBook() {
+        System.out.println("-Enter The Title: ");
+        String title = menuHandler.getScanner().nextLine();
+        System.out.println("-Enter The Author: ");
+        String author = menuHandler.getScanner().nextLine();
+        System.out.println("-Enter The Book ID: ");
+        String id = menuHandler.getScanner().nextLine();
+        System.out.println("-Enter The Published Date: ");
+        int year = menuHandler.getScanner().nextInt();
         bookManager.addBook(title, id, author , year);
     }
 
