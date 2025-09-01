@@ -44,7 +44,6 @@ public class MenuHandler {
                     //
                     break;
                 case 5:
-                    //FPR_3-1
                     handleLibrarianLogin();
                     break;
                 case 6:
@@ -219,7 +218,8 @@ public class MenuHandler {
                     System.out.println(currentLibrarian);
                     break;
                 case 2:
-                    //
+                    // FPR_3-2
+                    librarySystem.editLibrarianPassword(currentLibrarian);
                     break;
                 case 3:
                     //
