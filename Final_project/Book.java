@@ -11,6 +11,7 @@ public class Book implements Serializable {
     private boolean isAvailable;
     private LocalDate borrowStartDate;
     private LocalDate borrowEndDate;
+    private LocalDate requestDate;
     private String borrowedByStudentId;
     private boolean borrowRequested;
     private String requestedByStudentId;
@@ -28,12 +29,13 @@ public class Book implements Serializable {
         this.borrowRequested = false;
         this.requestedByStudentId = null;
         this.borrowDays = 0;
+        this.requestDate = null;
     }
     public boolean isBorrowRequested() { return borrowRequested; }
     public void setBorrowRequested(boolean borrowRequested , String studentId , int borrowDays) { this.borrowRequested = borrowRequested;
-    this.requestedByStudentId = studentId; this.borrowDays = borrowDays; isAvailable = false;}
+    this.requestedByStudentId = studentId; this.borrowDays = borrowDays; this.requestDate = LocalDate.now() ;isAvailable = false;}
 
-    public void approveBorrowRequest(int borrowDays) {
+    public void approveBorrowRequest() {
         borrowStartDate = LocalDate.now();
         borrowEndDate = LocalDate.now().plusDays(borrowDays);
         this.borrowedByStudentId = this.requestedByStudentId;
@@ -75,11 +77,17 @@ public class Book implements Serializable {
     public void setPublishYear(int publishYear) {
         this.publishYear = publishYear;
     }
+    public int getBorrowDays() {
+        return borrowDays;
+    }
     public boolean isAvailable() {
         return isAvailable;
     }
     public void setAvailable(boolean available) {
         isAvailable = available;
+    }
+    public boolean isRequested() {
+        return borrowRequested;
     }
 
     public LocalDate getBorrowStartDate() {
@@ -114,7 +122,7 @@ public class Book implements Serializable {
                 status = "Requested by Student Id : "+getRequestedByStudentId();
             }
             else {
-                status= "Not Available , Borrowed by " + borrowedByStudentId + "from " + borrowStartDate + " to " + borrowEndDate;
+                status= "Not Available , Borrowed by " + borrowedByStudentId + " from " + borrowStartDate + " to " + borrowEndDate;
             }
         }
         else {
@@ -123,5 +131,6 @@ public class Book implements Serializable {
 
         return "---title : " + title + "\n---id :" + id + "\n---author :" + author + "\n---status :" + status+"\n*=========================*";
     }
+
 
 }

@@ -138,6 +138,32 @@ public class LibrarySystem {
         bookManager.requestBorrow(bookId, student);
     }
 
+    public void approveBorrowRequests() {
+        List<Book> requestedBook = bookManager.showBorrowedRequests();
+        if (requestedBook.isEmpty()) {
+            System.out.println("No borrow request found.");
+            return;
+        }
+        System.out.println("\n****** Pending Borrow Requests ******");
+        for (int i=0; i<requestedBook.size(); i++) {
+            Book book = requestedBook.get(i);
+            System.out.println("-"+(i+1)+">>"+book.getTitle()+": "+" Requested by: "+book.getRequestedByStudentId()+" for "+book.getBorrowDays()+" Days"+"\n==================");
+        }
+        System.out.println("Enter the number of request to approve: ");
+        try {
+            int choice = Integer.parseInt(menuHandler.getScanner().nextLine());
+            if (choice > 0 && choice <= requestedBook.size()) {
+                Book book = requestedBook.get(choice - 1);
+                bookManager.approveBorrowRequest(book.getId());
+            }
+            else {
+                System.out.println("invalid choice!.");
+            }
+        }catch (NumberFormatException e) {
+            System.out.println("Invalid choice number! Please enter a valid number.");
+        }
+    }
+
     public void returnBook(Student student) {
         System.out.print("Enter book ID to return: ");
         String bookId = menuHandler.getScanner().nextLine();

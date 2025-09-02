@@ -160,6 +160,31 @@ public class BookManager {
         System.out.println("Book requested successfully by " + student.getName());
     }
 
+    public void approveBorrowRequest(String bookId) {
+        Book book = findBookById(bookId);
+        if (book == null) {
+            System.out.println("Book not found.");
+            return;
+        }
+        if (!book.isBorrowRequested()) {
+            System.out.println("No borrow request for this book.");
+            return;
+        }
+        book.approveBorrowRequest();
+        FileHandling.saveDataBk(books);
+        System.out.println("Borrow request approved successfully.");
+    }
+
+    public List<Book> showBorrowedRequests() {
+        List<Book> borrowedRequestBooks = new ArrayList<>();
+        for (Book book : books) {
+            if (book.isBorrowRequested()) {
+                borrowedRequestBooks.add(book);
+            }
+        }
+        return borrowedRequestBooks;
+    }
+
     public void returnBook(String bookId) {
         Book book = findBookById(bookId);
         if (book == null) {

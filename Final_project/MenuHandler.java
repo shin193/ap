@@ -224,19 +224,17 @@ public class MenuHandler {
                     librarySystem.addBook();
                     break;
                 case 4:
-                    // FPR_3-4
                     librarySystem.searchBooks();
                     break;
                 case 5:
-                    // FPR_3-4
                     librarySystem.displayAllBooks();
                     break;
                 case 6:
-                    // FPR_3-4
                     librarySystem.editBookInfo();
                     break;
                 case 7:
-                    //
+                    //FPR_3-5
+                    librarySystem.approveBorrowRequests();
                     break;
                 case 8:
                     currentLibrarian = null;
