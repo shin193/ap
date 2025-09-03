@@ -16,6 +16,7 @@ public class Book implements Serializable {
     private boolean borrowRequested;
     private String requestedByStudentId;
     private int borrowDays;
+    private static final long serialVersionUID = 1L;
 
     public Book(String title, String id, String author , int publisher) {
         this.title = title;
@@ -47,6 +48,9 @@ public class Book implements Serializable {
     public void rejectBorrowRequest() {
         this.borrowRequested = false;
         this.requestedByStudentId = null;
+        this.borrowDays = 0;
+        this.requestDate = null;
+        isAvailable = true;
     }
 
 
@@ -79,6 +83,9 @@ public class Book implements Serializable {
     }
     public int getBorrowDays() {
         return borrowDays;
+    }
+    public LocalDate getRequestDate() {
+        return requestDate;
     }
     public boolean isAvailable() {
         return isAvailable;

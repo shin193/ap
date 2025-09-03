@@ -1,6 +1,5 @@
 package Final_project;
 
-import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -33,16 +32,31 @@ public class StudentManager {
                 .orElse(null);
     }
 
-    public void displayStudents() {
-        System.out.println("\n--- List of Registered Students ---");
-
+    public void displayStudentsAccountStatus() {
         if (students.isEmpty()) {
             System.out.println("No students have registered yet.");
             return;
         }
 
-        for (Student student : students) {
-            System.out.println(student);
+        for (int i = 0; i < students.size(); i++) {
+            Student student = students.get(i);
+            System.out.println("-"+(i+1)+">>"+"Name: "+student.getName()+"| ID : "+student.getStudentId()+"| Account Status : "+ (student.isActive() ? "Enable " : "Disable ") +"\n---------------------------------------");
+        }
+        System.out.println("Enter the number of student to change His Account Status :");
+
+        int choice = sc.nextInt();
+        try {
+            if (choice > 0 && choice <= students.size()) {
+                System.out.println("Student : "+ students.get(choice - 1).getName() +" --Status changed from "+(students.get(choice-1).isActive() ? "Enable -----> Disable" : "Disable -----> Enable"));
+                students.get(choice - 1).setActive(!students.get(choice - 1).isActive());
+                FileHandling.saveDataSt(students);
+            }
+            else {
+                System.out.println("Please enter a valid choice");
+            }
+        }
+        catch (Exception e) {
+            System.out.println("Please enter a valid choice");
         }
     }
 

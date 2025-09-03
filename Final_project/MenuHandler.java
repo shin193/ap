@@ -90,10 +90,14 @@ public class MenuHandler {
 
         currentUser = librarySystem.authenticateStudent(username, password);
 
-        if (currentUser != null) {
+        if (currentUser != null && currentUser.isActive()) {
             System.out.println("Login successful! Welcome, " + currentUser.getName());
             displayLoggedInStudentMenu();
-        } else {
+        }
+        else if (!currentUser.isActive()){
+            System.out.println("Sorry , Your Account Has Been Disabled,You Can't Login Right Now.");
+        }
+        else  {
             System.out.println("Invalid username or password. Please try again.");
         }
     }
@@ -208,9 +212,10 @@ public class MenuHandler {
             System.out.println("5. View All Books With Borrow Status");
             System.out.println("6. Edit Book Information");
             System.out.println("7. Accept Borrow Requests");
-            System.out.println("8. Logout");
+            System.out.println("8. Active Or Deactivate A Student");
+            System.out.println("9. Logout");
             System.out.print("Please Enter Your Choice: ");
-            int choice = getIntInput(1, 8);
+            int choice = getIntInput(1, 9);
 
             switch (choice) {
                 case 1:
@@ -233,10 +238,13 @@ public class MenuHandler {
                     librarySystem.editBookInfo();
                     break;
                 case 7:
-                    //FPR_3-5
                     librarySystem.approveBorrowRequests();
                     break;
                 case 8:
+                    //FPR_3-7
+                    librarySystem.studentAccountActivity();
+                    break;
+                case 9:
                     currentLibrarian = null;
                     System.out.println("Logged out successfully.");
                     return;

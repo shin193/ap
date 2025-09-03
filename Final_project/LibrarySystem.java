@@ -27,6 +27,10 @@ public class LibrarySystem {
     public Student authenticateStudent(String username, String password) {
         return studentManager.authenticateStudent(username, password);
     }
+    public void studentAccountActivity() {
+        System.out.println("******Student Account Status******");
+        studentManager.displayStudentsAccountStatus();
+    }
     public void editStudentInfo(Student currentUser){
         studentManager.editStudentInformation(currentUser);
     }
@@ -190,5 +194,4 @@ public class LibrarySystem {
         LibrarySystem system = new LibrarySystem();
         system.start();
     }
-
 }

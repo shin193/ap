@@ -6,6 +6,7 @@ public class Librarian implements Serializable {
     private String username;
     private String password;
     private String name;
+    private static final long serialVersionUID = 1L;
 
     public Librarian(String username, String password, String name) {
         this.username = username;
