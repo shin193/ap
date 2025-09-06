@@ -59,6 +59,7 @@ public class LibrarySystem {
     }
 
     public void displayAllBooks() {
+        System.out.println("\n****** All Books ******");
         for (Book book : bookManager.getAllBooks()){
             System.out.println(book);
         }
@@ -136,10 +137,27 @@ public class LibrarySystem {
     }
 
     public void requestBorrowBook(Student student) {
-        System.out.print("Enter book ID to request: ");
-        String bookId = menuHandler.getScanner().nextLine();
-
-        bookManager.requestBorrow(bookId, student);
+        System.out.println("\n******List Of The Books******");
+        List<Book> books = bookManager.getAllBooks();
+        for (int i = 0; i <books.size(); i++) {
+            if (!books.get(i).isRequested() && books.get(i).isAvailable()) {
+                Book book = books.get(i);
+                System.out.println("-"+(i+1)+">>"+book);
+            }
+        }
+        System.out.println("Enter the number of books to request: ");
+        try {
+            int choice = Integer.parseInt(menuHandler.getScanner().nextLine());
+            if (choice >0 && choice <= books.size()) {
+                Book book = books.get(choice - 1);
+                bookManager.requestBorrow(book.getId() , student);
+            }
+            else {
+                System.out.println("invalid choice. Please try again.");
+            }
+        }catch (NumberFormatException e) {
+            System.out.println("Invalid number format! Please enter a valid number.");
+        }
     }
 
     public void approveBorrowRequests() {
@@ -168,6 +186,16 @@ public class LibrarySystem {
         }
     }
 
+    public void checkBorrowStatus(Student student) {
+        System.out.println("\n******** My Borrow Status *******");
+        bookManager.checkBorrowStatus(student);
+    }
+
+    public void checkBorrowStatusByLibrarian() {
+        System.out.println("\n******** Students Borrow Status *******");
+        bookManager.checkBorrowStatusByLibrarian();
+    }
+
     public void returnBook(Student student) {
         System.out.print("Enter book ID to return: ");
         String bookId = menuHandler.getScanner().nextLine();
@@ -177,6 +205,7 @@ public class LibrarySystem {
     public Librarian authenticateLibrarian(String username, String password) {
         return librarianManager.authenticateLibrarian(username, password);
     }
+
     public void editLibrarianPassword(Librarian currentlibrarian) {
         librarianManager.editLibrarianPassword(currentlibrarian);
     }
@@ -194,4 +223,6 @@ public class LibrarySystem {
         LibrarySystem system = new LibrarySystem();
         system.start();
     }
+
+
 }

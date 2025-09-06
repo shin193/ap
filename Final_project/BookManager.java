@@ -1,5 +1,7 @@
 package Final_project;
 
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 public class BookManager {
@@ -166,7 +168,7 @@ public class BookManager {
             System.out.println("Book not found.");
             return;
         }
-        if (!book.isBorrowRequested()) {
+        if (!book.isRequested()) {
             System.out.println("No borrow request for this book.");
             return;
         }
@@ -175,10 +177,73 @@ public class BookManager {
         System.out.println("Borrow request approved successfully.");
     }
 
+    public void checkBorrowStatus(Student student) {
+        boolean hasBorrowed = false;
+        for (Book book : books) {
+            if (student.getStudentId().equals(book.getBorrowedByStudentId())) {
+                hasBorrowed = true;
+                LocalDate today = LocalDate.now();
+                Long daysRemaining = ChronoUnit.DAYS.between(today, book.getBorrowEndDate());
+                System.out.println("|Book : " + book.getTitle() + " | Borrowed from : " + book.getBorrowStartDate() + " | Due date :" + book.getBorrowEndDate());
+                if (daysRemaining > 0) {
+                    System.out.println("Days remaining : " + daysRemaining + " Days");
+                } else if (daysRemaining == 0) {
+                    System.out.println("Due today ! Please return this book.");
+                } else {
+                    System.out.println("OVERDUE ! " + Math.abs(daysRemaining) + " Days late ,Please return this book immediately.");
+                }
+                System.out.println("------------------------------------------------");
+            }
+        }
+            if (!hasBorrowed) {
+                System.out.println("You don't have any borrowed books.");
+            }
+    }
+
+    public void checkBorrowStatusByLibrarian() {
+        boolean hasBorrowed = false;
+        for (Book book : books) {
+            if (!book.isAvailable()) {
+                hasBorrowed = true;
+                System.out.println("|Book : " + book.getTitle() +(book.isRequested() ? " | Requested" : " | Borrowed from : " + book.getBorrowStartDate() + " | Due date :" + book.getBorrowEndDate()) +" | By student ID : "+(book.isRequested() ? book.getRequestedByStudentId()+"\n============================================================" : book.getBorrowedByStudentId()));
+                if (!book.isRequested()) {
+                    LocalDate today = LocalDate.now();
+                    Long daysRemaining = ChronoUnit.DAYS.between(today, book.getBorrowEndDate());
+                    if (daysRemaining > 0) {
+                        System.out.println("Days remaining : " + daysRemaining + " Days");
+                    }
+                    else if (daysRemaining == 0) {
+                        System.out.println("Due today !.");
+                    }
+                    else {
+                        System.out.println("OVERDUE ! "+Math.abs(daysRemaining) + " Days late!.");
+                    }
+                    System.out.println("============================================================");
+                }
+            }
+        }
+        System.out.println("Total Number Of Borrows : " + getBorrowedBooksCount());
+        System.out.println("Total Number Of Requests : " +getRequestBooksCount());
+        if (!hasBorrowed) {
+            System.out.println("No Borrow Request For Books!.");
+        }
+
+    }
+
+    private int getRequestBooksCount() {
+        int count = 0;
+        for (Book book : books) {
+            if (book.isRequested()) {
+                count++;
+            }
+        }
+        return count;
+    }
+
     public List<Book> showBorrowedRequests() {
         List<Book> borrowedRequestBooks = new ArrayList<>();
         for (Book book : books) {
-            if (book.isBorrowRequested()) {
+            if (book.isRequested()) {
                 borrowedRequestBooks.add(book);
             }
         }
@@ -200,13 +265,22 @@ public class BookManager {
         System.out.println("Book returned successfully.");
     }
 
+    public int getBorrowedBooksCount() {
+        int count = 0;
+        for (Book book : books) {
+            if (!book.isAvailable() && !book.isRequested()) {
+                count++;
+            }
+        }
+        return count;
+    }
+
     private boolean isBookIdTaken(String id) {
         return bookMapID.containsKey(id);
     }
     public int getNumberOfBooks() { return books.size(); }
 
     public List<Book> getAllBooks() {
-        System.out.println("\n******* All Books *******");
         return books;
     }
 

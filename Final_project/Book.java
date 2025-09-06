@@ -32,7 +32,7 @@ public class Book implements Serializable {
         this.borrowDays = 0;
         this.requestDate = null;
     }
-    public boolean isBorrowRequested() { return borrowRequested; }
+
     public void setBorrowRequested(boolean borrowRequested , String studentId , int borrowDays) { this.borrowRequested = borrowRequested;
     this.requestedByStudentId = studentId; this.borrowDays = borrowDays; this.requestDate = LocalDate.now() ;isAvailable = false;}
 
@@ -136,7 +136,7 @@ public class Book implements Serializable {
             status = "Available";
         }
 
-        return "---title : " + title + "\n---id :" + id + "\n---author :" + author + "\n---status :" + status+"\n*=========================*";
+        return "| Title : " + title + "\n| ID :" + id + "\n| Author :" + author + "\n| Status :" + status+"\n*=========================*";
     }
 
 

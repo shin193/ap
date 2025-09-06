@@ -169,7 +169,7 @@ public class MenuHandler {
                     librarySystem.requestBorrowBook(currentUser);
                     break;
                 case 5:
-                    // //
+                    librarySystem.checkBorrowStatus(currentUser);
                     break;
                 case 6:
                     librarySystem.returnBook(currentUser);
@@ -213,9 +213,10 @@ public class MenuHandler {
             System.out.println("6. Edit Book Information");
             System.out.println("7. Accept Borrow Requests");
             System.out.println("8. Active Or Deactivate A Student");
-            System.out.println("9. Logout");
+            System.out.println("9. Check All Borrow Status");
+            System.out.println("10. Logout");
             System.out.print("Please Enter Your Choice: ");
-            int choice = getIntInput(1, 9);
+            int choice = getIntInput(1, 10);
 
             switch (choice) {
                 case 1:
@@ -241,10 +242,13 @@ public class MenuHandler {
                     librarySystem.approveBorrowRequests();
                     break;
                 case 8:
-                    //FPR_3-7
                     librarySystem.studentAccountActivity();
                     break;
                 case 9:
+                    // FPR_3-6
+                    librarySystem.checkBorrowStatusByLibrarian();
+                    break;
+                case 10:
                     currentLibrarian = null;
                     System.out.println("Logged out successfully.");
                     return;
