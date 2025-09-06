@@ -117,13 +117,14 @@ public class MenuHandler {
                     displayStudentCount();
                     break;
                 case "2":
+                    //FPR_2-3
                     displayBookCount();
                     break;
                 case "3":
-                    // FPR_2-2
                     librarySystem.searchBooksByGuest();
                     break;
                 case "4":
+                    //FPR_2-3
                     librarySystem.getLoanCounts();
                     break;
                 case "5":

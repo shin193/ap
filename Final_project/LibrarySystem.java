@@ -47,7 +47,7 @@ public class LibrarySystem {
     }
 
     public void getLoanCounts() {
-        bookManager.getBorrowedBooksCount();
+        System.out.println("Total Loans are : "+bookManager.getBorrowedBooksCount());
     }
 
     public void displayAvailableBooks() {
