@@ -307,7 +307,6 @@ public class MenuHandler {
                     librarySystem.editManagerPassword(currentManager);
                     break;
                 case 3:
-                    //FPR_4-3
                     librarySystem.displaySystemStatistics();
                     break;
                 case 4:
@@ -320,9 +319,11 @@ public class MenuHandler {
                     librarySystem.displayAllBooks();
                     break;
                 case 7:
+                    //FPR_4-4
                     librarySystem.checkBorrowStatusByLibrarian();
                     break;
                 case 8:
+                    //FPR_4-4
                     librarySystem.displayTop10StudentsWithMostDelays();
                     break;
                 case 9:
