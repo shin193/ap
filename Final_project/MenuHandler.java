@@ -120,10 +120,11 @@ public class MenuHandler {
                     displayBookCount();
                     break;
                 case "3":
-                    //empty
+                    // FPR_2-2
+                    librarySystem.searchBooksByGuest();
                     break;
                 case "4":
-                    //empty
+                    librarySystem.getLoanCounts();
                     break;
                 case "5":
                     return;
@@ -245,7 +246,6 @@ public class MenuHandler {
                     librarySystem.studentAccountActivity();
                     break;
                 case 9:
-                    // FPR_3-6
                     librarySystem.checkBorrowStatusByLibrarian();
                     break;
                 case 10:

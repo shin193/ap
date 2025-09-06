@@ -46,6 +46,10 @@ public class LibrarySystem {
         bookManager.addBook(title, id, author , year);
     }
 
+    public void getLoanCounts() {
+        bookManager.getBorrowedBooksCount();
+    }
+
     public void displayAvailableBooks() {
         List<Book> availableBooks = bookManager.getAvailableBooks();
         if (availableBooks.isEmpty()) {
@@ -63,6 +67,12 @@ public class LibrarySystem {
         for (Book book : bookManager.getAllBooks()){
             System.out.println(book);
         }
+    }
+
+    public void searchBooksByGuest() {
+        System.out.println(">>Enter The Book Name : ");
+        String bookName = menuHandler.getScanner().nextLine();
+        bookManager.searchBooksByGuest (bookName);
     }
 
     public void searchBooks() {
@@ -223,6 +233,4 @@ public class LibrarySystem {
         LibrarySystem system = new LibrarySystem();
         system.start();
     }
-
-
 }

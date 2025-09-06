@@ -139,6 +139,19 @@ public class BookManager {
         return bookMapID.get(id);
     }
 
+    public void searchBooksByGuest(String bookName) {
+        boolean found = false;
+        for (Book book : books) {
+            if (book.getTitle().toLowerCase().contains(bookName.toLowerCase())) {
+                found = true;
+                System.out.println(book.getTitle());
+            }
+        }
+        if (!found) {
+            System.out.println("No book with name " + bookName + " found.");
+        }
+    }
+
     public void requestBorrow(String bookId, Student student) {
         Book book = findBookById(bookId);
         if (book == null) {
@@ -283,5 +296,4 @@ public class BookManager {
     public List<Book> getAllBooks() {
         return books;
     }
-
 }
