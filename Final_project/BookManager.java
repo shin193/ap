@@ -3,6 +3,7 @@ package Final_project;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class BookManager {
     private List<Book> books = new ArrayList<>();
@@ -144,7 +145,7 @@ public class BookManager {
         for (Book book : books) {
             if (book.getTitle().toLowerCase().contains(bookName.toLowerCase())) {
                 found = true;
-                System.out.println(book.getTitle());
+                System.out.println(book);
             }
         }
         if (!found) {
@@ -243,7 +244,7 @@ public class BookManager {
 
     }
 
-    private int getRequestBooksCount() {
+    public int getRequestBooksCount() {
         int count = 0;
         for (Book book : books) {
             if (book.isRequested()) {
@@ -252,6 +253,35 @@ public class BookManager {
         }
         return count;
     }
+
+    public Map<String, Long> getStudentsWithDelays() {
+        Map<String, Long> studentDelays = new HashMap<>();
+        LocalDate today = LocalDate.now();
+
+        for (Book book : books) {
+            if (!book.isAvailable() && !book.isRequested() && book.getBorrowEndDate() != null) {
+                String studentId = book.getBorrowedByStudentId();
+                LocalDate dueDate = book.getBorrowEndDate();
+
+                if (today.isAfter(dueDate)) {
+                    long daysLate = ChronoUnit.DAYS.between(dueDate, today);
+                    studentDelays.put(studentId, studentDelays.getOrDefault(studentId, 0L) + daysLate);
+                }
+            }
+        }
+
+        return studentDelays;
+    }
+
+    public List<Map.Entry<String, Long>> getTop10StudentsWithMostDelays() {
+        Map<String, Long> studentDelays = getStudentsWithDelays();
+
+        return studentDelays.entrySet().stream()
+                .sorted((entry1, entry2) -> Long.compare(entry2.getValue(), entry1.getValue()))
+                .limit(10)
+                .collect(Collectors.toList());
+    }
+
 
     public List<Book> showBorrowedRequests() {
         List<Book> borrowedRequestBooks = new ArrayList<>();

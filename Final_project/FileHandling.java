@@ -65,5 +65,25 @@ public class FileHandling {
             return new ArrayList<>();
         }
     }
+    public static void saveManager(Manager manager) {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("manager.dat"))) {
+            oos.writeObject(manager);
+        } catch (IOException e) {
+            System.out.println("Error saving manager: " + e.getMessage());
+        }
+    }
+
+    public static Manager loadManager() {
+        File file = new File("manager.dat");
+        if (!file.exists()) {
+            return null;
+        }
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream("manager.dat"))) {
+            return (Manager) ois.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            System.out.println("Error loading manager: " + e.getMessage());
+            return null;
+        }
+    }
 
 }

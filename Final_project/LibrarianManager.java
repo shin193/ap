@@ -3,6 +3,7 @@ package Final_project;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 public class LibrarianManager {
@@ -22,6 +23,10 @@ public class LibrarianManager {
         Librarian defaultLibrarian = new Librarian("abc", "123456", "Default Librarian");
         librarians.add(defaultLibrarian);
         FileHandling.saveLibrarians(librarians);
+    }
+
+    private List<Librarian> getAllLibrarians() {
+        return librarians;
     }
 
     public Librarian authenticateLibrarian(String username, String password) {
@@ -52,5 +57,9 @@ public class LibrarianManager {
         currentlibrarian.setPassword(newPassword);
         FileHandling.saveLibrarians(librarians);
         System.out.println("Your password has been changed.");
+    }
+
+    public List<Librarian> getLibrarians() {
+        return librarians;
     }
 }

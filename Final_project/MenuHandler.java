@@ -7,6 +7,7 @@ public class MenuHandler {
     private LibrarySystem librarySystem;
     private Student currentUser;
     private Librarian currentLibrarian;
+    private Manager currentManager;
 
     public MenuHandler(LibrarySystem librarySystem) {
         this.scanner = new Scanner(System.in);
@@ -41,7 +42,7 @@ public class MenuHandler {
                     handleStudentLogin();
                     break;
                 case 4:
-                    //
+                    handleManagerLogin();
                     break;
                 case 5:
                     handleLibrarianLogin();
@@ -101,6 +102,26 @@ public class MenuHandler {
             System.out.println("Invalid username or password. Please try again.");
         }
     }
+
+    private void handleManagerLogin() {
+        System.out.println("\n--- Manager Login ---");
+
+        System.out.print("Username: ");
+        String username = scanner.nextLine();
+
+        System.out.print("Password: ");
+        String password = scanner.nextLine();
+
+        currentManager = librarySystem.authenticateManager(username, password);
+
+        if (currentManager != null) {
+            System.out.println("Login successful! Welcome, " + currentManager.getName());
+            displayLoggedInManagerMenu();
+        } else {
+            System.out.println("Invalid username or password. Please try again.");
+        }
+    }
+
 
     private void displayGuestLogin() {
         while (true){
@@ -258,6 +279,61 @@ public class MenuHandler {
                     break;
             }
 
+        }
+    }
+
+    private void displayLoggedInManagerMenu() {
+        while (currentManager != null) {
+            System.out.println("\n=== Manager Dashboard ===");
+            System.out.println("1. View My Information");
+            System.out.println("2. Edit My Password");
+            System.out.println("3. View System Statistics");
+            System.out.println("4. Manage Librarians");
+            System.out.println("5. View All Students");
+            System.out.println("6. View All Books");
+            System.out.println("7. View Borrow Status");
+            System.out.println("8. View Top 10 Students with Most Delays");
+            System.out.println("9. Logout");
+            System.out.print("Please enter your choice: ");
+
+            int choice = getIntInput(1, 9);
+
+            switch (choice) {
+                case 1:
+                    //FPR_4-1
+                    System.out.println("\n--- My Information ---");
+                    System.out.println(currentManager);
+                    break;
+                case 2:
+                    //FPR_4-1
+                    librarySystem.editManagerPassword(currentManager);
+                    break;
+                case 3:
+                    librarySystem.displaySystemStatistics();
+                    break;
+                case 4:
+                    //FPR_4-1
+                    librarySystem.manageLibrarians();
+                    break;
+                case 5:
+                    librarySystem.displayAllStudent();
+                    break;
+                case 6:
+                    librarySystem.displayAllBooks();
+                    break;
+                case 7:
+                    librarySystem.checkBorrowStatusByLibrarian();
+                    break;
+                case 8:
+                    librarySystem.displayTop10StudentsWithMostDelays();
+                    break;
+                case 9:
+                    currentManager = null;
+                    System.out.println("Logged out successfully.");
+                    return;
+                default:
+                    System.out.println("Invalid option! Please try again.");
+            }
         }
     }
 

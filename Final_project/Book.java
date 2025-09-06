@@ -129,7 +129,7 @@ public class Book implements Serializable {
                 status = "Requested by Student Id : "+getRequestedByStudentId();
             }
             else {
-                status= "Not Available , Borrowed by " + borrowedByStudentId + " from " + borrowStartDate + " to " + borrowEndDate;
+                status= "Not Available , Borrowed by Student Id :" + borrowedByStudentId + " from " + borrowStartDate + " to " + borrowEndDate;
             }
         }
         else {

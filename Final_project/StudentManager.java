@@ -60,6 +60,10 @@ public class StudentManager {
         }
     }
 
+    public List<Student> getAllStudents() {
+        return students;
+    }
+
     public void editStudentInformation(Student currentUser) {
         System.out.println("What would you like to edit?");
         System.out.println("1. Name");

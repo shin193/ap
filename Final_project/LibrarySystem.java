@@ -1,23 +1,40 @@
 package Final_project;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class LibrarySystem {
     private StudentManager studentManager;
     private BookManager bookManager;
     private LibrarianManager librarianManager;
     private MenuHandler menuHandler;
+    private ManagerManager managerManager;
 
     public LibrarySystem() {
         this.studentManager = new StudentManager();
         this.bookManager = new BookManager();
         this.librarianManager = new LibrarianManager();
         this.menuHandler = new MenuHandler(this);
+        this.managerManager = new ManagerManager();
+    }
+
+    public Manager authenticateManager(String username, String password) {
+        return managerManager.authenticateManager(username, password);
+    }
+
+    public void editManagerPassword(Manager currentManager) {
+        managerManager.editManagerPassword(currentManager);
+    }
+
+    public Manager getManager() {
+        return managerManager.getManager();
     }
 
     public int getStudentCount() {
         return this.studentManager.getStudentCount();
     }
+
     public int getBookCount() {return this.bookManager.getNumberOfBooks();}
 
     public void registerStudent(String name, String studentId, String username, String password) {
@@ -220,8 +237,74 @@ public class LibrarySystem {
         librarianManager.editLibrarianPassword(currentlibrarian);
     }
 
-    public void addLibrarian(String username, String password, String name) {
+    public void addNewLibrarian() {
+        System.out.println("\n--- Add New Librarian ---");
+
+        System.out.print("Enter username: ");
+        String username = menuHandler.getScanner().nextLine();
+
+        System.out.print("Enter password: ");
+        String password = menuHandler.getScanner().nextLine();
+
+        System.out.print("Enter full name: ");
+        String name = menuHandler.getScanner().nextLine();
+
         librarianManager.addLibrarian(username, password, name);
+    }
+
+    public void manageLibrarians() {
+        while (true) {
+            System.out.println("\n=== Librarian Management ===");
+            System.out.println("1. Add New Librarian");
+            System.out.println("2. View All Librarians");
+            System.out.println("3. Back to Manager Menu");
+            System.out.print("Please enter your choice: ");
+
+            try {
+                int choice = Integer.parseInt(menuHandler.getScanner().nextLine());
+
+                switch (choice) {
+                    case 1:
+                        addNewLibrarian();
+                        break;
+                    case 2:
+                        displayAllLibrarians();
+                        break;
+                    case 3:
+                        return;
+                    default:
+                        System.out.println("Invalid option! Please try again.");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Please enter a valid number.");
+            }
+        }
+    }
+
+    public void displayAllLibrarians() {
+        System.out.println("\n--- All Librarians ---");
+        List<Librarian> librarians = librarianManager.getLibrarians();
+
+        if (librarians.isEmpty()) {
+            System.out.println("No librarians found.");
+            return;
+        }
+
+        for (int i = 0; i < librarians.size(); i++) {
+            Librarian librarian = librarians.get(i);
+            System.out.println((i + 1) + ". " + librarian.getName() +
+                    " (Username: " + librarian.getUsername() + ")");
+        }
+    }
+
+
+    public void displaySystemStatistics() {
+        System.out.println("\n=== System Statistics ===");
+        System.out.println("Total Students: " + getStudentCount());
+        System.out.println("Total Books: " + getBookCount());
+        System.out.println("Total Librarians: " + librarianManager.getLibrarians().size());
+        System.out.println("Active Borrows: " + bookManager.getBorrowedBooksCount());
+        System.out.println("Pending Requests: " + bookManager.getRequestBooksCount());
     }
 
     public void start() {
@@ -233,4 +316,54 @@ public class LibrarySystem {
         LibrarySystem system = new LibrarySystem();
         system.start();
     }
+
+    public void displayAllStudent() {
+        System.out.println("\n--- All Students ---");
+        List<Student> students = studentManager.getAllStudents();
+
+        if (students.isEmpty()) {
+            System.out.println("No Student found.");
+            return;
+        }
+
+        for (int i = 0; i < students.size(); i++) {
+            Student student = students.get(i);
+            System.out.println((i + 1) + ". " + student.getName() +
+                    " (Username: " + student.getUsername() + ")");
+        }
+    }
+    public void displayTop10StudentsWithMostDelays() {
+        List<Map.Entry<String, Long>> topDelayedStudents = bookManager.getTop10StudentsWithMostDelays();
+
+        System.out.println("\n=== Top 10 Students with Most Delays ===");
+
+        if (topDelayedStudents.isEmpty()) {
+            System.out.println("No students with delayed books found.");
+            return;
+        }
+
+        for (int i = 0; i < topDelayedStudents.size(); i++) {
+            Map.Entry<String, Long> entry = topDelayedStudents.get(i);
+            String studentId = entry.getKey();
+            Long totalDelayDays = entry.getValue();
+
+
+            String studentName = "Unknown";
+            Student student = findStudentById(studentId);
+            if (student != null) {
+                studentName = student.getName();
+            }
+
+            System.out.println((i + 1) + ". " + studentName +
+                    " (ID: " + studentId +
+                    ") - Total Delay: " + totalDelayDays + " days");
+        }
+    }
+    private Student findStudentById(String studentId) {
+        return studentManager.getAllStudents().stream()
+                .filter(s -> s.getStudentId().equals(studentId))
+                .findFirst()
+                .orElse(null);
+    }
+
 }
