@@ -307,10 +307,10 @@ public class MenuHandler {
                     librarySystem.editManagerPassword(currentManager);
                     break;
                 case 3:
+                    //FPR_4-3
                     librarySystem.displaySystemStatistics();
                     break;
                 case 4:
-                    //FPR_4-2
                     librarySystem.manageLibrarians();
                     break;
                 case 5:
