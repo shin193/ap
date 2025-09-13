@@ -56,12 +56,10 @@ public class MenuHandler {
             System.out.println("___________________________");
         }
     }
-
     private void displayStudentCount() {
         int studentCount = librarySystem.getStudentCount();
         System.out.println("\nTotal registered students: " + studentCount);
     }
-
     private void handleStudentRegistration() {
         System.out.println("\n--- New Student Registration ---");
 
@@ -79,7 +77,6 @@ public class MenuHandler {
 
         librarySystem.registerStudent(name, studentId, username, password);
     }
-
     private void handleStudentLogin() {
         System.out.println("\n--- Student Login ---");
 
@@ -91,18 +88,18 @@ public class MenuHandler {
 
         currentUser = librarySystem.authenticateStudent(username, password);
 
-        if (currentUser != null && currentUser.isActive()) {
+        if (currentUser == null)  {
+            System.out.println("Invalid username or password. Please try again.");
+            return;
+        }
+        if (!currentUser.isActive()) {
+            System.out.println("Sorry , Your Account Has Been Disabled,You Can't Login Right Now.");
+        }
+        else if (currentUser != null && currentUser.isActive()) {
             System.out.println("Login successful! Welcome, " + currentUser.getName());
             displayLoggedInStudentMenu();
         }
-        else if (!currentUser.isActive()){
-            System.out.println("Sorry , Your Account Has Been Disabled,You Can't Login Right Now.");
-        }
-        else  {
-            System.out.println("Invalid username or password. Please try again.");
-        }
     }
-
     private void handleManagerLogin() {
         System.out.println("\n--- Manager Login ---");
 
@@ -121,8 +118,6 @@ public class MenuHandler {
             System.out.println("Invalid username or password. Please try again.");
         }
     }
-
-
     private void displayGuestLogin() {
         while (true){
             System.out.println("\n=== Guest User ===");
@@ -156,12 +151,10 @@ public class MenuHandler {
 
         }
     }
-
     private void displayBookCount() {
         int bookCount = librarySystem.getBookCount();
         System.out.println("\nTotal books are : " + bookCount);
     }
-
     private void displayLoggedInStudentMenu() {
         while (currentUser != null) {
             System.out.println("\n=== Student Dashboard ===");
@@ -209,7 +202,6 @@ public class MenuHandler {
             }
         }
     }
-
     private void handleLibrarianLogin() {
         System.out.println("Please Enter Your Username: ");
         String username = scanner.nextLine();
@@ -224,7 +216,6 @@ public class MenuHandler {
             System.out.println("Invalid username or password. Please try again.");
         }
     }
-
     private void displayLoggedInLibrarianMenu() {
         while (true){
             System.out.println("\n=== Librarian Menu ===");
@@ -237,9 +228,12 @@ public class MenuHandler {
             System.out.println("7. Accept Borrow Requests");
             System.out.println("8. Active Or Deactivate A Student");
             System.out.println("9. Check All Borrow Status");
-            System.out.println("10. Logout");
+            System.out.println("10. Receive Borrowed Book");
+            System.out.println("11. View Books to Receive");
+            System.out.println("12. View Received Books");
+            System.out.println("13. Logout");
             System.out.print("Please Enter Your Choice: ");
-            int choice = getIntInput(1, 10);
+            int choice = getIntInput(1, 13);
 
             switch (choice) {
                 case 1:
@@ -271,6 +265,15 @@ public class MenuHandler {
                     librarySystem.checkBorrowStatusByLibrarian();
                     break;
                 case 10:
+                    librarySystem.receiveBook();
+                    break;
+                case 11:
+                    librarySystem.displayBooksToReceive();
+                    break;
+                case 12:
+                    librarySystem.displayReceivedBooks();
+                    break;
+                case 13:
                     currentLibrarian = null;
                     System.out.println("Logged out successfully.");
                     return;
@@ -281,7 +284,6 @@ public class MenuHandler {
 
         }
     }
-
     private void displayLoggedInManagerMenu() {
         while (currentManager != null) {
             System.out.println("\n=== Manager Dashboard ===");
@@ -335,7 +337,6 @@ public class MenuHandler {
             }
         }
     }
-
     private int getIntInput(int min, int max) {
         while (true) {
             try {

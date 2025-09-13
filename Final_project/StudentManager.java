@@ -44,8 +44,8 @@ public class StudentManager {
         }
         System.out.println("Enter the number of student to change His Account Status :");
 
-        int choice = sc.nextInt();
         try {
+            int choice = Integer.parseInt(sc.nextLine());
             if (choice > 0 && choice <= students.size()) {
                 System.out.println("Student : "+ students.get(choice - 1).getName() +" --Status changed from "+(students.get(choice-1).isActive() ? "Enable -----> Disable" : "Disable -----> Enable"));
                 students.get(choice - 1).setActive(!students.get(choice - 1).isActive());

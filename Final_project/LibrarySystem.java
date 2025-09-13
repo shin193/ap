@@ -63,10 +63,79 @@ public class LibrarySystem {
         bookManager.addBook(title, id, author , year);
     }
 
+    public void receiveBook() {
+        System.out.println("\n=== Receive Borrowed Book ===");
+        List<Book> booksToReceive = bookManager.getBorrowedButNotReceivedBooks();
+
+        if (booksToReceive.isEmpty()) {
+            System.out.println("No books waiting to be received.");
+            return;
+        }
+        System.out.println("\n--- Books Waiting to be Received ---");
+        for (int i = 0; i < booksToReceive.size(); i++) {
+            Book book = booksToReceive.get(i);
+            System.out.println((i + 1) + ". " + book.getTitle() +
+                    " (ID: " + book.getId() +
+                    ") - Borrowed by: " + book.getBorrowedByStudentId() +
+                    " - Due: " + book.getBorrowEndDate());
+        }
+        System.out.print("Enter the number of book to receive: ");
+        try {
+            int choice = Integer.parseInt(menuHandler.getScanner().nextLine());
+            if (choice > 0 && choice <= booksToReceive.size()) {
+                Book book = booksToReceive.get(choice - 1);
+                bookManager.receiveBook(book.getId());
+            } else {
+                System.out.println("Invalid choice.");
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("Please enter a valid number.");
+        }
+    }
+
+    public void displayBooksToReceive() {
+        System.out.println("\n=== Books Waiting to be Received ===");
+        List<Book> booksToReceive = bookManager.getBorrowedButNotReceivedBooks();
+
+        if (booksToReceive.isEmpty()) {
+            System.out.println("No books waiting to be received.");
+            return;
+        }
+
+        for (int i = 0; i < booksToReceive.size(); i++) {
+            Book book = booksToReceive.get(i);
+            System.out.println((i + 1) + ". " + book.getTitle() +
+                    " | ID: " + book.getId() +
+                    " | Borrowed by: " + book.getBorrowedByStudentId() +
+                    " | Borrowed on: " + book.getBorrowStartDate() +
+                    " | Due: " + book.getBorrowEndDate());
+        }
+        System.out.println("Total books waiting to be received: " + booksToReceive.size());
+    }
+
+    public void displayReceivedBooks() {
+        System.out.println("\n=== Received Books ===");
+        List<Book> receivedBooks = bookManager.getReceivedBooks();
+
+        if (receivedBooks.isEmpty()) {
+            System.out.println("No books have been received yet.");
+            return;
+        }
+
+        for (int i = 0; i < receivedBooks.size(); i++) {
+            Book book = receivedBooks.get(i);
+            System.out.println((i + 1) + ". " + book.getTitle() +
+                    " | ID: " + book.getId() +
+                    " | Borrowed by: " + book.getBorrowedByStudentId() +
+                    " | Received on: " + book.getReceivedDate() +
+                    " | Due: " + book.getBorrowEndDate());
+        }
+        System.out.println("Total books received: " + receivedBooks.size());
+    }
+
     public void getLoanCounts() {
         System.out.println("Total Loans are : "+bookManager.getBorrowedBooksCount());
     }
-
     public void displayAvailableBooks() {
         List<Book> availableBooks = bookManager.getAvailableBooks();
         if (availableBooks.isEmpty()) {

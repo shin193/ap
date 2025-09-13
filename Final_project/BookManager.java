@@ -36,32 +36,15 @@ public class BookManager {
     }
 
     public List<Book> searchBooks(String title, String author, Integer publicationYear) {
-        List<Book> results = new ArrayList<>();
-
-        for (Book book : books) {
-            boolean matches = true;
-
-            if (title != null && !title.isEmpty()) {
-                if (!book.getTitle().toLowerCase().contains(title.toLowerCase())) {
-                    matches = false;
-                }
-            }
-            if (matches && author != null && !author.isEmpty()) {
-                if (!book.getAuthor().toLowerCase().contains(author.toLowerCase())) {
-                    matches = false;
-                }
-            }
-            if (matches && publicationYear != null) {
-                if (book.getPublishYear() != publicationYear) {
-                    matches = false;
-                }
-            }
-            if (matches) {
-                results.add(book);
-            }
-        }
-
-        return results;
+        return books.stream()
+                .filter(book ->
+                        (title == null || title.isEmpty() ||
+                                book.getTitle().toLowerCase().contains(title.toLowerCase())) &&
+                                (author == null || author.isEmpty() ||
+                                        book.getAuthor().toLowerCase().contains(author.toLowerCase())) &&
+                                (publicationYear == null || book.getPublishYear() == publicationYear)
+                )
+                .collect(Collectors.toList());
     }
 
     public void addBook(String title, String id, String author , int year) {
@@ -166,7 +149,7 @@ public class BookManager {
         System.out.println("How many days do you want to borrow the book?");
         int days;
         try {
-            days = scanner.nextInt();
+            days = Integer.parseInt(scanner.nextLine());
         }catch (InputMismatchException e) {
             System.out.println("Please enter an number.");
             return;
@@ -176,6 +159,49 @@ public class BookManager {
         System.out.println("Book requested successfully by " + student.getName());
     }
 
+    public void receiveBook(String bookId) {
+        Book book = findBookById(bookId);
+        if (book == null) {
+            System.out.println("Book not found.");
+            return;
+        }
+        if (book.isAvailable()) {
+            System.out.println("Book is already available and not borrowed.");
+            return;
+        }
+        if (book.isRequested()) {
+            System.out.println("Book is requested but not yet approved. Cannot receive.");
+            return;
+        }
+        if (book.isReceived()) {
+            System.out.println("Book was already received on: " + book.getReceivedDate());
+            return;
+        }
+
+        book.markAsReceived();
+        FileHandling.saveDataBk(books);
+        System.out.println("Book received successfully on: " + LocalDate.now());
+        System.out.println("Borrowed by student ID: " + book.getBorrowedByStudentId());
+    }
+    public List<Book> getBorrowedButNotReceivedBooks() {
+        List<Book> notReceivedBooks = new ArrayList<>();
+        for (Book book : books) {
+            if (!book.isAvailable() && !book.isRequested() && !book.isReceived()) {
+                notReceivedBooks.add(book);
+            }
+        }
+        return notReceivedBooks;
+    }
+
+    public List<Book> getReceivedBooks() {
+        List<Book> receivedBooks = new ArrayList<>();
+        for (Book book : books) {
+            if (book.isReceived()) {
+                receivedBooks.add(book);
+            }
+        }
+        return receivedBooks;
+    }
     public void approveBorrowRequest(String bookId) {
         Book book = findBookById(bookId);
         if (book == null) {

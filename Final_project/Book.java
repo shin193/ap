@@ -17,6 +17,8 @@ public class Book implements Serializable {
     private String requestedByStudentId;
     private int borrowDays;
     private static final long serialVersionUID = 1L;
+    private LocalDate receivedDate;
+    private boolean isReceived;
 
     public Book(String title, String id, String author , int publisher) {
         this.title = title;
@@ -31,11 +33,30 @@ public class Book implements Serializable {
         this.requestedByStudentId = null;
         this.borrowDays = 0;
         this.requestDate = null;
+        this.receivedDate = null;
+        this.isReceived = false;
     }
 
+    public void markAsReceived() {
+        this.isReceived = true;
+        this.receivedDate = LocalDate.now();
+    }
+    public LocalDate getReceivedDate() {
+        return receivedDate;
+    }
+    public void setReceived(boolean received) {
+        isReceived = received;
+        if (received) {
+            this.receivedDate = LocalDate.now();
+        } else {
+            this.receivedDate = null;
+        }
+    }
+    public boolean isReceived() {
+        return isReceived;
+    }
     public void setBorrowRequested(boolean borrowRequested , String studentId , int borrowDays) { this.borrowRequested = borrowRequested;
     this.requestedByStudentId = studentId; this.borrowDays = borrowDays; this.requestDate = LocalDate.now() ;isAvailable = false;}
-
     public void approveBorrowRequest() {
         borrowStartDate = LocalDate.now();
         borrowEndDate = LocalDate.now().plusDays(borrowDays);
@@ -44,7 +65,6 @@ public class Book implements Serializable {
         this.requestedByStudentId = null;
         isAvailable = false;
     }
-
     public void rejectBorrowRequest() {
         this.borrowRequested = false;
         this.requestedByStudentId = null;
@@ -52,8 +72,6 @@ public class Book implements Serializable {
         this.requestDate = null;
         isAvailable = true;
     }
-
-
     public String getRequestedByStudentId() {
         return requestedByStudentId;
     }
@@ -96,7 +114,6 @@ public class Book implements Serializable {
     public boolean isRequested() {
         return borrowRequested;
     }
-
     public LocalDate getBorrowStartDate() {
         return borrowStartDate;
     }
@@ -113,31 +130,30 @@ public class Book implements Serializable {
         isAvailable = false;
 
     }
-
     public void returnBook() {
         this.borrowStartDate = null;
         this.borrowEndDate = null;
         this.borrowedByStudentId = null;
         isAvailable = true;
     }
-
     @Override
     public String toString() {
         String status;
         if (!isAvailable) {
             if (borrowStartDate == null) {
-                status = "Requested by Student Id : "+getRequestedByStudentId();
+                status = "Requested by Student Id: " + getRequestedByStudentId();
+            } else {
+                String receivedInfo = isReceived ?
+                        " | Received on: " + receivedDate :
+                        " | Not yet received";
+                status = "Not Available, Borrowed by Student Id: " + borrowedByStudentId +
+                        " from " + borrowStartDate + " to " + borrowEndDate + receivedInfo;
             }
-            else {
-                status= "Not Available , Borrowed by Student Id :" + borrowedByStudentId + " from " + borrowStartDate + " to " + borrowEndDate;
-            }
-        }
-        else {
+        } else {
             status = "Available";
         }
 
-        return "| Title : " + title + "\n| ID :" + id + "\n| Author :" + author + "\n| Status :" + status+"\n*=========================*";
+        return "| Title: " + title + "\n| ID: " + id + "\n| Author: " + author +
+                "\n| Status: " + status + "\n*=========================*";
     }
-
-
 }
