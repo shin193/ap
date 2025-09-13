@@ -19,6 +19,7 @@ public class Book implements Serializable {
     private static final long serialVersionUID = 1L;
     private LocalDate receivedDate;
     private boolean isReceived;
+    private boolean isReturned;
 
     public Book(String title, String id, String author , int publisher) {
         this.title = title;
@@ -35,22 +36,16 @@ public class Book implements Serializable {
         this.requestDate = null;
         this.receivedDate = null;
         this.isReceived = false;
+        this.isReturned = false;
     }
 
     public void markAsReceived() {
         this.isReceived = true;
+        this.isReturned = false;
         this.receivedDate = LocalDate.now();
     }
     public LocalDate getReceivedDate() {
         return receivedDate;
-    }
-    public void setReceived(boolean received) {
-        isReceived = received;
-        if (received) {
-            this.receivedDate = LocalDate.now();
-        } else {
-            this.receivedDate = null;
-        }
     }
     public boolean isReceived() {
         return isReceived;
@@ -64,13 +59,7 @@ public class Book implements Serializable {
         this.borrowRequested = false;
         this.requestedByStudentId = null;
         isAvailable = false;
-    }
-    public void rejectBorrowRequest() {
-        this.borrowRequested = false;
-        this.requestedByStudentId = null;
-        this.borrowDays = 0;
-        this.requestDate = null;
-        isAvailable = true;
+        isReturned = false;
     }
     public String getRequestedByStudentId() {
         return requestedByStudentId;
@@ -102,17 +91,14 @@ public class Book implements Serializable {
     public int getBorrowDays() {
         return borrowDays;
     }
-    public LocalDate getRequestDate() {
-        return requestDate;
-    }
     public boolean isAvailable() {
         return isAvailable;
     }
-    public void setAvailable(boolean available) {
-        isAvailable = available;
-    }
     public boolean isRequested() {
         return borrowRequested;
+    }
+    public boolean isReturned() {
+        return isReturned;
     }
     public LocalDate getBorrowStartDate() {
         return borrowStartDate;
@@ -123,18 +109,14 @@ public class Book implements Serializable {
     public String getBorrowedByStudentId() {
         return borrowedByStudentId;
     }
-    public void setBorrowDates(LocalDate borrowStartDate, LocalDate borrowEndDate , String borrowedByStudentId) {
-        this.borrowStartDate = borrowStartDate;
-        this.borrowEndDate = borrowEndDate;
-        this.borrowedByStudentId = borrowedByStudentId;
-        isAvailable = false;
 
-    }
     public void returnBook() {
         this.borrowStartDate = null;
         this.borrowEndDate = null;
         this.borrowedByStudentId = null;
-        isAvailable = true;
+        this.isAvailable = true;
+        this.isReturned = true;
+        this.isReceived = false;
     }
     @Override
     public String toString() {
@@ -156,4 +138,5 @@ public class Book implements Serializable {
         return "| Title: " + title + "\n| ID: " + id + "\n| Author: " + author +
                 "\n| Status: " + status + "\n*=========================*";
     }
+
 }

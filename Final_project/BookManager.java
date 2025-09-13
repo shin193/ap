@@ -112,7 +112,7 @@ public class BookManager {
     public List<Book> getAvailableBooks() {
         List<Book> availableBooks = new ArrayList<>();
         for (Book book : books) {
-            if (book.isAvailable()) {
+            if (book.isAvailable() && !book.isReturned()) {
                 availableBooks.add(book);
             }
         }
@@ -165,28 +165,19 @@ public class BookManager {
             System.out.println("Book not found.");
             return;
         }
-        if (book.isAvailable()) {
-            System.out.println("Book is already available and not borrowed.");
-            return;
-        }
         if (book.isRequested()) {
             System.out.println("Book is requested but not yet approved. Cannot receive.");
-            return;
-        }
-        if (book.isReceived()) {
-            System.out.println("Book was already received on: " + book.getReceivedDate());
             return;
         }
 
         book.markAsReceived();
         FileHandling.saveDataBk(books);
         System.out.println("Book received successfully on: " + LocalDate.now());
-        System.out.println("Borrowed by student ID: " + book.getBorrowedByStudentId());
     }
     public List<Book> getBorrowedButNotReceivedBooks() {
         List<Book> notReceivedBooks = new ArrayList<>();
         for (Book book : books) {
-            if (!book.isAvailable() && !book.isRequested() && !book.isReceived()) {
+            if (book.isReturned() && !book.isReceived()) {
                 notReceivedBooks.add(book);
             }
         }
@@ -329,7 +320,7 @@ public class BookManager {
             System.out.println("Book is already available.");
             return;
         }
-        book.setAvailable(true);
+        book.returnBook();
         FileHandling.saveDataBk(books);
         System.out.println("Book returned successfully.");
     }

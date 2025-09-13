@@ -75,9 +75,7 @@ public class LibrarySystem {
         for (int i = 0; i < booksToReceive.size(); i++) {
             Book book = booksToReceive.get(i);
             System.out.println((i + 1) + ". " + book.getTitle() +
-                    " (ID: " + book.getId() +
-                    ") - Borrowed by: " + book.getBorrowedByStudentId() +
-                    " - Due: " + book.getBorrowEndDate());
+                    " (ID: " + book.getId()+" )");
         }
         System.out.print("Enter the number of book to receive: ");
         try {
