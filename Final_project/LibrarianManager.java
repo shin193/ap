@@ -11,7 +11,7 @@ public class LibrarianManager {
     private Scanner sc;
 
     public LibrarianManager() {
-        this.librarians = FileHandling.loadLibrarians();
+        this.librarians = Database.loadLibrarians();
         if (librarians.isEmpty()) {
             addDefaultLibrarian();
         }
@@ -22,7 +22,7 @@ public class LibrarianManager {
     private void addDefaultLibrarian() {
         Librarian defaultLibrarian = new Librarian("abc", "123456", "Default Librarian");
         librarians.add(defaultLibrarian);
-        FileHandling.saveLibrarians(librarians);
+        Database.saveLibrarians(librarians);
     }
 
     private List<Librarian> getAllLibrarians() {
@@ -43,7 +43,7 @@ public class LibrarianManager {
         }
         Librarian newLibrarian = new Librarian(username, password, name);
         librarians.add(newLibrarian);
-        FileHandling.saveLibrarians(librarians);
+        Database.saveLibrarians(librarians);
         System.out.println("Librarian added successfully.");
     }
 
@@ -55,7 +55,7 @@ public class LibrarianManager {
         System.out.println("Enter your new password: ");
         String newPassword = sc.nextLine();
         currentlibrarian.setPassword(newPassword);
-        FileHandling.saveLibrarians(librarians);
+        Database.saveLibrarians(librarians);
         System.out.println("Your password has been changed.");
     }
 

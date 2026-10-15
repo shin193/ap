@@ -11,7 +11,7 @@ public class BookManager {
     private Scanner scanner = new Scanner(System.in);
 
     public BookManager() {
-        this.books = FileHandling.loadDataBk();
+        this.books = Database.loadBooks();
         if (books.isEmpty()) {
             addDefaultBooks();
         }
@@ -32,7 +32,7 @@ public class BookManager {
 
         books.add(book1);
         books.add(book2);
-        FileHandling.saveDataBk(books);
+        Database.saveBooks(books);
     }
 
     public List<Book> searchBooks(String title, String author, Integer publicationYear) {
@@ -56,7 +56,7 @@ public class BookManager {
         Book newBook = new Book(title, id, author , year);
         bookMapID.put(id, newBook);
         books.add(newBook);
-        FileHandling.saveDataBk(books);
+        Database.saveBooks(books);
         System.out.println("Book added successfully.");
     }
 
@@ -105,7 +105,7 @@ public class BookManager {
                     System.out.println("Invalid option.");
                     return;
             }
-        FileHandling.saveDataBk(books);
+        Database.saveBooks(books);
         System.out.println("Book edited successfully.");
     }
 
@@ -155,7 +155,7 @@ public class BookManager {
             return;
         }
         book.setBorrowRequested(true , student.getStudentId(), days);
-        FileHandling.saveDataBk(books);
+        Database.saveBooks(books);
         System.out.println("Book requested successfully by " + student.getName());
     }
 
@@ -171,7 +171,7 @@ public class BookManager {
         }
 
         book.markAsReceived();
-        FileHandling.saveDataBk(books);
+        Database.saveBooks(books);
         System.out.println("Book received successfully on: " + LocalDate.now());
     }
     public List<Book> getBorrowedButNotReceivedBooks() {
@@ -204,7 +204,7 @@ public class BookManager {
             return;
         }
         book.approveBorrowRequest();
-        FileHandling.saveDataBk(books);
+        Database.saveBooks(books);
         System.out.println("Borrow request approved successfully.");
     }
 
@@ -321,7 +321,7 @@ public class BookManager {
             return;
         }
         book.returnBook();
-        FileHandling.saveDataBk(books);
+        Database.saveBooks(books);
         System.out.println("Book returned successfully.");
     }
 

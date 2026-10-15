@@ -64,6 +64,26 @@ public class Book implements Serializable {
     public String getRequestedByStudentId() {
         return requestedByStudentId;
     }
+    public LocalDate getRequestDate() {
+        return requestDate;
+    }
+
+    public void restoreState(boolean isAvailable, LocalDate borrowStartDate, LocalDate borrowEndDate,
+                             LocalDate requestDate, String borrowedByStudentId, boolean borrowRequested,
+                             String requestedByStudentId, int borrowDays, LocalDate receivedDate,
+                             boolean isReceived, boolean isReturned) {
+        this.isAvailable = isAvailable;
+        this.borrowStartDate = borrowStartDate;
+        this.borrowEndDate = borrowEndDate;
+        this.requestDate = requestDate;
+        this.borrowedByStudentId = borrowedByStudentId;
+        this.borrowRequested = borrowRequested;
+        this.requestedByStudentId = requestedByStudentId;
+        this.borrowDays = borrowDays;
+        this.receivedDate = receivedDate;
+        this.isReceived = isReceived;
+        this.isReturned = isReturned;
+    }
     public String getTitle() {
         return title;
     }

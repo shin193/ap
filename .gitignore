@@ -22,3 +22,10 @@
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 replay_pid*
+
+# SQLite runtime database and build output of Final_project
+library.db
+build/
+
+# bundled SQLite JDBC driver needed to run Final_project
+!Final_project/lib/*.jar

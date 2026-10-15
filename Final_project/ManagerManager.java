@@ -7,7 +7,7 @@ public class ManagerManager {
     private Scanner sc;
 
     public ManagerManager() {
-        this.manager = FileHandling.loadManager();
+        this.manager = Database.loadManager();
         if (manager == null) {
             createDefaultManager();
         }
@@ -16,7 +16,7 @@ public class ManagerManager {
 
     private void createDefaultManager() {
         manager = new Manager("ADMIN", "1111", "System Administrator");
-        FileHandling.saveManager(manager);
+        Database.saveManager(manager);
     }
 
     public Manager authenticateManager(String username, String password) {
@@ -30,7 +30,7 @@ public class ManagerManager {
         System.out.println("Enter your new password: ");
         String newPassword = sc.nextLine();
         currentManager.setPassword(newPassword);
-        FileHandling.saveManager(currentManager);
+        Database.saveManager(currentManager);
         System.out.println("Your password has been changed.");
     }
 
