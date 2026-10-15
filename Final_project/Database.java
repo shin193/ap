@@ -226,9 +226,10 @@ public class Database {
     //manager handling
     public static void saveManager(Manager manager) {
         try (Connection conn = getConnection();
+             Statement st = conn.createStatement();
              PreparedStatement ps = conn.prepareStatement(
                      "INSERT INTO manager (id, username, password, name) VALUES (1,?,?,?)")) {
-            conn.createStatement().executeUpdate("DELETE FROM manager");
+            st.executeUpdate("DELETE FROM manager");
             ps.setString(1, manager.getUsername());
             ps.setString(2, manager.getPassword());
             ps.setString(3, manager.getName());
