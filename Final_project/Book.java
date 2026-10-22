@@ -137,6 +137,11 @@ public class Book implements Serializable {
         this.isAvailable = true;
         this.isReturned = true;
         this.isReceived = false;
+        this.receivedDate = null;
+        this.borrowRequested = false;
+        this.requestedByStudentId = null;
+        this.requestDate = null;
+        this.borrowDays = 0;
     }
     @Override
     public String toString() {

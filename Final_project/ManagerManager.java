@@ -7,11 +7,15 @@ public class ManagerManager {
     private Scanner sc;
 
     public ManagerManager() {
+        this(new Scanner(System.in));
+    }
+
+    public ManagerManager(Scanner sc) {
         this.manager = Database.loadManager();
         if (manager == null) {
             createDefaultManager();
         }
-        sc = new Scanner(System.in);
+        this.sc = sc;
     }
 
     private void createDefaultManager() {

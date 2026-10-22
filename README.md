@@ -33,3 +33,20 @@ On Linux/macOS use `:` instead of `;` in the classpath.
 - On first start the database file `library.db` is created automatically next to the working directory.
 - Old `.dat` files from the previous serialization-based storage are imported automatically
   on first start and renamed to `*.dat.migrated`.
+- Import failures preserve the original files and stop startup. A failed backup rename
+  preserves both files; existing backups are never overwritten.
+- Database read/write failures stop the session with an error instead of continuing with
+  empty or unsaved data. Resolve the reported problem before restarting.
+- Student IDs must be unique and cannot change while a request or loan references them.
+
+### Regression tests
+
+With a JDK and Python 3 installed, run from the repository root:
+
+```bash
+python Final_project/tests/run_tests.py
+```
+
+The tests compile into a temporary directory and use isolated SQLite files. They cover
+restart persistence, transaction rollback, failed manager updates, legacy migration and
+backup preservation, startup/read failures, and the console loan workflow.

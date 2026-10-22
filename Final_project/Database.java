@@ -3,6 +3,8 @@ package Final_project;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.ObjectInputStream;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -10,6 +12,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,7 +28,7 @@ public class Database {
         try {
             Class.forName("org.sqlite.JDBC");
         } catch (ClassNotFoundException e) {
-            System.out.println("SQLite driver not found on the classpath: " + e.getMessage());
+            throw new StorageException("SQLite driver not found on the classpath", e);
         }
         try (Connection conn = getConnection(); Statement st = conn.createStatement()) {
             st.executeUpdate("CREATE TABLE IF NOT EXISTS students (" +
@@ -61,7 +64,7 @@ public class Database {
                     "name TEXT NOT NULL)");
             migrateLegacyData();
         } catch (SQLException e) {
-            System.out.println("an error occured while initializing database: " + e.getMessage());
+            throw new StorageException("Could not initialize library.db", e);
         }
     }
 
@@ -69,10 +72,32 @@ public class Database {
     }
 
     private static Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(DB_URL);
+        Connection conn = DriverManager.getConnection(DB_URL);
+        try (Statement st = conn.createStatement()) {
+            st.execute("PRAGMA busy_timeout = 5000");
+            return conn;
+        } catch (SQLException e) {
+            conn.close();
+            throw e;
+        }
     }
 
     //student handling
+    public static boolean hasStudentLoans(String studentId) {
+        try (Connection conn = getConnection();
+             PreparedStatement ps = conn.prepareStatement(
+                     "SELECT 1 FROM books WHERE requested_by_student_id = ? " +
+                             "OR borrowed_by_student_id = ? LIMIT 1")) {
+            ps.setString(1, studentId);
+            ps.setString(2, studentId);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next();
+            }
+        } catch (SQLException e) {
+            throw new StorageException("Could not check student loans", e);
+        }
+    }
+
     public static void saveStudents(List<Student> students) {
         try (Connection conn = getConnection()) {
             conn.setAutoCommit(false);
@@ -90,12 +115,12 @@ public class Database {
                 }
                 ps.executeBatch();
                 conn.commit();
-            } catch (SQLException e) {
+            } catch (SQLException | RuntimeException e) {
                 conn.rollback();
                 throw e;
             }
         } catch (SQLException e) {
-            System.out.println("an error occured while saving: " + e.getMessage());
+            throw new StorageException("Could not save students", e);
         }
     }
 
@@ -111,7 +136,7 @@ public class Database {
                 students.add(student);
             }
         } catch (SQLException e) {
-            System.out.println("an error occured while loading: " + e.getMessage());
+            throw new StorageException("Could not load students", e);
         }
         return students;
     }
@@ -147,12 +172,12 @@ public class Database {
                 }
                 ps.executeBatch();
                 conn.commit();
-            } catch (SQLException e) {
+            } catch (SQLException | RuntimeException e) {
                 conn.rollback();
                 throw e;
             }
         } catch (SQLException e) {
-            System.out.println("an error occured while saving: " + e.getMessage());
+            throw new StorageException("Could not save books", e);
         }
     }
 
@@ -178,8 +203,8 @@ public class Database {
                         rs.getInt("is_returned") == 1);
                 books.add(book);
             }
-        } catch (SQLException e) {
-            System.out.println("an error occured while loading: " + e.getMessage());
+        } catch (SQLException | DateTimeParseException e) {
+            throw new StorageException("Could not load books", e);
         }
         return books;
     }
@@ -200,12 +225,12 @@ public class Database {
                 }
                 ps.executeBatch();
                 conn.commit();
-            } catch (SQLException e) {
+            } catch (SQLException | RuntimeException e) {
                 conn.rollback();
                 throw e;
             }
         } catch (SQLException e) {
-            System.out.println("Error saving librarians: " + e.getMessage());
+            throw new StorageException("Could not save librarians", e);
         }
     }
 
@@ -218,7 +243,7 @@ public class Database {
                 librarians.add(new Librarian(rs.getString("username"), rs.getString("password"), rs.getString("name")));
             }
         } catch (SQLException e) {
-            System.out.println("Error loading librarians: " + e.getMessage());
+            throw new StorageException("Could not load librarians", e);
         }
         return librarians;
     }
@@ -226,16 +251,16 @@ public class Database {
     //manager handling
     public static void saveManager(Manager manager) {
         try (Connection conn = getConnection();
-             Statement st = conn.createStatement();
              PreparedStatement ps = conn.prepareStatement(
-                     "INSERT INTO manager (id, username, password, name) VALUES (1,?,?,?)")) {
-            st.executeUpdate("DELETE FROM manager");
+                     "INSERT INTO manager (id, username, password, name) VALUES (1,?,?,?) " +
+                             "ON CONFLICT(id) DO UPDATE SET username=excluded.username, " +
+                             "password=excluded.password, name=excluded.name")) {
             ps.setString(1, manager.getUsername());
             ps.setString(2, manager.getPassword());
             ps.setString(3, manager.getName());
             ps.executeUpdate();
         } catch (SQLException e) {
-            System.out.println("Error saving manager: " + e.getMessage());
+            throw new StorageException("Could not save manager", e);
         }
     }
 
@@ -247,7 +272,7 @@ public class Database {
                 return new Manager(rs.getString("username"), rs.getString("password"), rs.getString("name"));
             }
         } catch (SQLException e) {
-            System.out.println("Error loading manager: " + e.getMessage());
+            throw new StorageException("Could not load manager", e);
         }
         return null;
     }
@@ -266,13 +291,16 @@ public class Database {
         if (!legacy.exists() || !isTableEmpty("students")) {
             return;
         }
-        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(legacy))) {
-            List<Student> students = (List<Student>) ois.readObject();
+        try {
+            List<Student> students;
+            try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(legacy))) {
+                students = (List<Student>) ois.readObject();
+            }
             saveStudents(students);
             renameMigratedFile(legacy);
             System.out.println("Migrated " + students.size() + " students from students.dat into library.db");
         } catch (Exception e) {
-            System.out.println("Could not migrate old students.dat, starting with an empty table: " + e.getMessage());
+            throw new StorageException("Could not migrate students.dat; original file preserved", e);
         }
     }
 
@@ -282,13 +310,16 @@ public class Database {
         if (!legacy.exists() || !isTableEmpty("books")) {
             return;
         }
-        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(legacy))) {
-            List<Book> books = (List<Book>) ois.readObject();
+        try {
+            List<Book> books;
+            try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(legacy))) {
+                books = (List<Book>) ois.readObject();
+            }
             saveBooks(books);
             renameMigratedFile(legacy);
             System.out.println("Migrated " + books.size() + " books from Books.dat into library.db");
         } catch (Exception e) {
-            System.out.println("Could not migrate old Books.dat, starting with an empty table: " + e.getMessage());
+            throw new StorageException("Could not migrate Books.dat; original file preserved", e);
         }
     }
 
@@ -298,13 +329,16 @@ public class Database {
         if (!legacy.exists() || !isTableEmpty("librarians")) {
             return;
         }
-        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(legacy))) {
-            List<Librarian> librarians = (List<Librarian>) ois.readObject();
+        try {
+            List<Librarian> librarians;
+            try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(legacy))) {
+                librarians = (List<Librarian>) ois.readObject();
+            }
             saveLibrarians(librarians);
             renameMigratedFile(legacy);
             System.out.println("Migrated " + librarians.size() + " librarians from librarians.dat into library.db");
         } catch (Exception e) {
-            System.out.println("Could not migrate old librarians.dat, starting with an empty table: " + e.getMessage());
+            throw new StorageException("Could not migrate librarians.dat; original file preserved", e);
         }
     }
 
@@ -313,29 +347,35 @@ public class Database {
         if (!legacy.exists() || !isTableEmpty("manager")) {
             return;
         }
-        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(legacy))) {
-            Manager manager = (Manager) ois.readObject();
+        try {
+            Manager manager;
+            try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(legacy))) {
+                manager = (Manager) ois.readObject();
+            }
             saveManager(manager);
             renameMigratedFile(legacy);
             System.out.println("Migrated manager from manager.dat into library.db");
         } catch (Exception e) {
-            System.out.println("Could not migrate old manager.dat, starting with an empty table: " + e.getMessage());
+            throw new StorageException("Could not migrate manager.dat; original file preserved", e);
         }
     }
 
     private static boolean isTableEmpty(String table) {
         try (Connection conn = getConnection();
-             ResultSet rs = conn.createStatement().executeQuery("SELECT COUNT(*) FROM " + table)) {
+             Statement st = conn.createStatement();
+             ResultSet rs = st.executeQuery("SELECT COUNT(*) FROM " + table)) {
             return rs.next() && rs.getInt(1) == 0;
         } catch (SQLException e) {
-            return true;
+            throw new StorageException("Could not check legacy migration for " + table, e);
         }
     }
 
     private static void renameMigratedFile(File legacy) {
-        File migrated = new File(legacy.getName() + ".migrated");
-        if (!legacy.renameTo(migrated)) {
-            legacy.delete();
+        try {
+            Files.move(legacy.toPath(), legacy.toPath().resolveSibling(legacy.getName() + ".migrated"));
+        } catch (IOException e) {
+            System.err.println("Data imported, but could not rename " + legacy +
+                    "; original file preserved: " + e.getMessage());
         }
     }
 

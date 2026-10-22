@@ -2,6 +2,7 @@ package Final_project;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
 import java.util.stream.Collectors;
 
 public class LibrarySystem {
@@ -12,11 +13,12 @@ public class LibrarySystem {
     private ManagerManager managerManager;
 
     public LibrarySystem() {
-        this.studentManager = new StudentManager();
-        this.bookManager = new BookManager();
-        this.librarianManager = new LibrarianManager();
-        this.menuHandler = new MenuHandler(this);
-        this.managerManager = new ManagerManager();
+        Scanner scanner = new Scanner(System.in);
+        this.studentManager = new StudentManager(scanner);
+        this.bookManager = new BookManager(scanner);
+        this.librarianManager = new LibrarianManager(scanner);
+        this.menuHandler = new MenuHandler(this, scanner);
+        this.managerManager = new ManagerManager(scanner);
     }
 
     public Manager authenticateManager(String username, String password) {
@@ -59,8 +61,12 @@ public class LibrarySystem {
         System.out.println("-Enter The Book ID: ");
         String id = menuHandler.getScanner().nextLine();
         System.out.println("-Enter The Published Date: ");
-        int year = menuHandler.getScanner().nextInt();
-        bookManager.addBook(title, id, author , year);
+        try {
+            int year = Integer.parseInt(menuHandler.getScanner().nextLine());
+            bookManager.addBook(title, id, author, year);
+        } catch (NumberFormatException e) {
+            System.out.println("Please enter a valid year.");
+        }
     }
 
     public void receiveBook() {
@@ -293,7 +299,7 @@ public class LibrarySystem {
     public void returnBook(Student student) {
         System.out.print("Enter book ID to return: ");
         String bookId = menuHandler.getScanner().nextLine();
-        bookManager.returnBook(bookId);
+        bookManager.returnBook(bookId, student);
     }
 
     public Librarian authenticateLibrarian(String username, String password) {
@@ -380,8 +386,18 @@ public class LibrarySystem {
 
 
     public static void main(String[] args) {
-        LibrarySystem system = new LibrarySystem();
-        system.start();
+        try {
+            LibrarySystem system = new LibrarySystem();
+            system.start();
+        } catch (StorageException | ExceptionInInitializerError e) {
+            System.err.println("Storage failure. Session stopped; please resolve the error and restart.");
+            Throwable cause = e;
+            while (cause != null) {
+                System.err.println(cause.getMessage());
+                cause = cause.getCause();
+            }
+            System.exit(1);
+        }
     }
 
     public void displayAllStudent() {

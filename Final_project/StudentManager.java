@@ -9,11 +9,19 @@ public class StudentManager {
     private Scanner sc;
 
     public StudentManager() {
+        this(new Scanner(System.in));
+    }
+
+    public StudentManager(Scanner sc) {
         this.students=Database.loadStudents();
-        this.sc=new Scanner(System.in);
+        this.sc=sc;
     }
 
     public void registerStudent(String name, String studentId, String username, String password) {
+        if (studentId == null || studentId.trim().isEmpty() || isStudentIdTaken(studentId)) {
+            System.out.println("Student ID must be non-empty and unique.");
+            return;
+        }
         if (isUsernameTaken(username)) {
             System.out.println("This username already exists. Please choose a different username.");
             return;
@@ -47,15 +55,15 @@ public class StudentManager {
         try {
             int choice = Integer.parseInt(sc.nextLine());
             if (choice > 0 && choice <= students.size()) {
-                System.out.println("Student : "+ students.get(choice - 1).getName() +" --Status changed from "+(students.get(choice-1).isActive() ? "Enable -----> Disable" : "Disable -----> Enable"));
                 students.get(choice - 1).setActive(!students.get(choice - 1).isActive());
                 Database.saveStudents(students);
+                System.out.println("Student account status updated.");
             }
             else {
                 System.out.println("Please enter a valid choice");
             }
         }
-        catch (Exception e) {
+        catch (NumberFormatException e) {
             System.out.println("Please enter a valid choice");
         }
     }
@@ -102,6 +110,17 @@ public class StudentManager {
         else if (choice.equals("4")) {
             System.out.println("Enter your new student ID: ");
             String newStudentID = sc.nextLine();
+            if (newStudentID.equals(currentUser.getStudentId())) {
+                return;
+            }
+            if (newStudentID.trim().isEmpty() || isStudentIdTaken(newStudentID)) {
+                System.out.println("Student ID must be non-empty and unique.");
+                return;
+            }
+            if (Database.hasStudentLoans(currentUser.getStudentId())) {
+                System.out.println("Student ID cannot change while you have pending requests or active loans.");
+                return;
+            }
             currentUser.setStudentId(newStudentID);
             Database.saveStudents(students);
             System.out.println("Your student ID has been edited.");
@@ -114,6 +133,10 @@ public class StudentManager {
 
     public boolean isUsernameTaken(String username) {
         return students.stream().anyMatch(s -> s.getUsername().equals(username));
+    }
+
+    private boolean isStudentIdTaken(String studentId) {
+        return students.stream().anyMatch(s -> s.getStudentId().equals(studentId));
     }
 
     public int getStudentCount() {

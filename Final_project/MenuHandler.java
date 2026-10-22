@@ -10,7 +10,11 @@ public class MenuHandler {
     private Manager currentManager;
 
     public MenuHandler(LibrarySystem librarySystem) {
-        this.scanner = new Scanner(System.in);
+        this(librarySystem, new Scanner(System.in));
+    }
+
+    public MenuHandler(LibrarySystem librarySystem, Scanner scanner) {
+        this.scanner = scanner;
         this.librarySystem = librarySystem;
         this.currentUser = null;
         this.currentLibrarian = null;
@@ -29,7 +33,7 @@ public class MenuHandler {
             System.out.println("6. Exit");
             System.out.print("Please enter your choice: ");
 
-            int choice = getIntInput(1, 7);
+            int choice = getIntInput(1, 6);
 
             switch (choice) {
                 case 1:
