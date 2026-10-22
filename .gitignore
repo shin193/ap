@@ -35,5 +35,10 @@ Final_project/*.dat.migrated
 build/
 __pycache__/
 
+# Maven output and local IntelliJ build caches
+target/
+/.maven-cache/
+/.codex-build/
+
 # bundled SQLite JDBC driver needed to run Final_project
 !Final_project/lib/*.jar

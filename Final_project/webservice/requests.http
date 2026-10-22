@@ -1,0 +1,61 @@
+@baseUrl = http://127.0.0.1:8090
+@staffToken = paste-staff-token-here
+@studentToken = paste-student-token-here
+
+### Health
+GET {{baseUrl}}/api/health
+
+### Register a student
+POST {{baseUrl}}/api/students
+Content-Type: application/json
+
+{"name":"Ali","studentId":"s100","username":"ali","password":"secret123"}
+
+### Student login: copy token into studentToken above
+POST {{baseUrl}}/api/auth/login
+Content-Type: application/json
+
+{"role":"STUDENT","username":"ali","password":"secret123"}
+
+### Librarian login: copy token into staffToken above
+POST {{baseUrl}}/api/auth/login
+Content-Type: application/json
+
+{"role":"LIBRARIAN","username":"abc","password":"123456"}
+
+### Public search
+GET {{baseUrl}}/api/books?available=true
+
+### Add book
+POST {{baseUrl}}/api/books
+Authorization: Bearer {{staffToken}}
+Content-Type: application/json
+
+{"id":"b100","title":"Clean Code","author":"Robert Martin","publishYear":2008}
+
+### Request a loan
+POST {{baseUrl}}/api/books/b100/borrow-requests
+Authorization: Bearer {{studentToken}}
+Content-Type: application/json
+
+{"days":7}
+
+### Approve
+POST {{baseUrl}}/api/books/b100/approve
+Authorization: Bearer {{staffToken}}
+
+### Confirm collection
+POST {{baseUrl}}/api/books/b100/receive
+Authorization: Bearer {{staffToken}}
+
+### My loans
+GET {{baseUrl}}/api/loans
+Authorization: Bearer {{studentToken}}
+
+### Return
+POST {{baseUrl}}/api/books/b100/return
+Authorization: Bearer {{studentToken}}
+
+### Logout
+POST {{baseUrl}}/api/auth/logout
+Authorization: Bearer {{studentToken}}
