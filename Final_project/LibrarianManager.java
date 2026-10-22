@@ -11,11 +11,15 @@ public class LibrarianManager {
     private Scanner sc;
 
     public LibrarianManager() {
+        this(new Scanner(System.in));
+    }
+
+    public LibrarianManager(Scanner sc) {
         this.librarians = Database.loadLibrarians();
         if (librarians.isEmpty()) {
             addDefaultLibrarian();
         }
-        sc = new Scanner(System.in);
+        this.sc = sc;
     }
 
 

@@ -25,7 +25,15 @@ replay_pid*
 
 # SQLite runtime database and build output of Final_project
 library.db
+library.db-journal
+library.db-wal
+library.db-shm
+Final_project/*.dat
+Final_project/*.dat.migrated
+/*.dat
+/*.dat.migrated
 build/
+__pycache__/
 
 # bundled SQLite JDBC driver needed to run Final_project
 !Final_project/lib/*.jar

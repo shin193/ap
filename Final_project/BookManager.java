@@ -8,9 +8,14 @@ import java.util.stream.Collectors;
 public class BookManager {
     private List<Book> books = new ArrayList<>();
     private Map<String, Book> bookMapID = new HashMap<>();
-    private Scanner scanner = new Scanner(System.in);
+    private Scanner scanner;
 
     public BookManager() {
+        this(new Scanner(System.in));
+    }
+
+    public BookManager(Scanner scanner) {
+        this.scanner = scanner;
         this.books = Database.loadBooks();
         if (books.isEmpty()) {
             addDefaultBooks();
@@ -89,6 +94,7 @@ public class BookManager {
                     String newAuthor = scanner.nextLine();
                     if (newAuthor.trim().isEmpty()) {
                         System.out.println("Author cannot be empty!");
+                        return;
                     }
                     book.setAuthor(newAuthor);
                     break;
@@ -99,7 +105,12 @@ public class BookManager {
                         System.out.println("Publication year cannot be empty!");
                         return;
                     }
-                    book.setPublishYear(Integer.parseInt(newYear));
+                    try {
+                        book.setPublishYear(Integer.parseInt(newYear));
+                    } catch (NumberFormatException e) {
+                        System.out.println("Please enter a valid year.");
+                        return;
+                    }
                     break;
                 default:
                     System.out.println("Invalid option.");
@@ -112,7 +123,7 @@ public class BookManager {
     public List<Book> getAvailableBooks() {
         List<Book> availableBooks = new ArrayList<>();
         for (Book book : books) {
-            if (book.isAvailable() && !book.isReturned()) {
+            if (book.isAvailable()) {
                 availableBooks.add(book);
             }
         }
@@ -137,6 +148,10 @@ public class BookManager {
     }
 
     public void requestBorrow(String bookId, Student student) {
+        if (!student.isActive()) {
+            System.out.println("Your account is disabled.");
+            return;
+        }
         Book book = findBookById(bookId);
         if (book == null) {
             System.out.println("Book not found.");
@@ -150,8 +165,12 @@ public class BookManager {
         int days;
         try {
             days = Integer.parseInt(scanner.nextLine());
-        }catch (InputMismatchException e) {
+        }catch (NumberFormatException e) {
             System.out.println("Please enter an number.");
+            return;
+        }
+        if (days <= 0) {
+            System.out.println("Please enter a positive, valid number of days.");
             return;
         }
         book.setBorrowRequested(true , student.getStudentId(), days);
@@ -165,8 +184,8 @@ public class BookManager {
             System.out.println("Book not found.");
             return;
         }
-        if (book.isRequested()) {
-            System.out.println("Book is requested but not yet approved. Cannot receive.");
+        if (book.isAvailable() || book.isRequested() || book.getBorrowedByStudentId() == null || book.isReceived()) {
+            System.out.println("Only an approved loan waiting for collection can be received.");
             return;
         }
 
@@ -177,7 +196,8 @@ public class BookManager {
     public List<Book> getBorrowedButNotReceivedBooks() {
         List<Book> notReceivedBooks = new ArrayList<>();
         for (Book book : books) {
-            if (book.isReturned() && !book.isReceived()) {
+            if (!book.isAvailable() && !book.isRequested() &&
+                    book.getBorrowedByStudentId() != null && !book.isReceived()) {
                 notReceivedBooks.add(book);
             }
         }
@@ -320,9 +340,22 @@ public class BookManager {
             System.out.println("Book is already available.");
             return;
         }
+        if (book.isRequested()) {
+            System.out.println("This request has not been approved yet.");
+            return;
+        }
         book.returnBook();
         Database.saveBooks(books);
         System.out.println("Book returned successfully.");
+    }
+
+    public void returnBook(String bookId, Student student) {
+        Book book = findBookById(bookId);
+        if (book == null || !student.getStudentId().equals(book.getBorrowedByStudentId())) {
+            System.out.println("You can only return a book borrowed by you.");
+            return;
+        }
+        returnBook(bookId);
     }
 
     public int getBorrowedBooksCount() {
