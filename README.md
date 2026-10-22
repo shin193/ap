@@ -9,6 +9,22 @@ Console-based library management system with guest / student / librarian / manag
 
 Data is persisted in a lightweight **SQLite** database (`library.db`).
 
+### Spring Boot web service
+
+A REST API is available alongside the console application. It supports role-based
+authentication, book CRUD/search, student registration and the complete loan workflow
+against the same SQLite schema. See [the Persian API guide](Final_project/webservice/README.md)
+and [sample HTTP requests](Final_project/webservice/requests.http).
+
+```bash
+# from the repository root (JDK 17+ and Maven)
+mvn -f Final_project/pom.xml clean verify
+java -jar Final_project/webservice/target/library-webservice-1.0.0.jar
+```
+
+Health check: `http://127.0.0.1:8080/api/health`. Run the console and API separately;
+the console keeps a cached snapshot of the library data.
+
 ### Build & Run
 
 The SQLite JDBC driver is bundled in `Final_project/lib/`.

@@ -27,7 +27,7 @@ public class StudentManager {
             return;
         }
 
-        Student newStudent = new Student(name, studentId, username, password);
+        Student newStudent = new Student(name, studentId, username, Passwords.hash(password));
         students.add(newStudent);
         Database.saveStudents(students);
         System.out.println("Student registration completed successfully.");
@@ -35,7 +35,7 @@ public class StudentManager {
 
     public Student authenticateStudent(String username, String password) {
         return students.stream()
-                .filter(s -> s.getUsername().equals(username) && s.getPassword().equals(password))
+                .filter(s -> s.getUsername().equals(username) && Passwords.matches(password, s.getPassword()))
                 .findFirst()
                 .orElse(null);
     }
@@ -103,7 +103,7 @@ public class StudentManager {
         else if (choice.equals("3")) {
             System.out.println("Enter your new password: ");
             String newPassword = sc.nextLine();
-            currentUser.setPassword(newPassword);
+            currentUser.setPassword(Passwords.hash(newPassword));
             Database.saveStudents(students);
             System.out.println("Your password has been edited.");
         }

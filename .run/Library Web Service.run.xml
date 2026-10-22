@@ -1,0 +1,8 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Library Web Service" type="JarApplication" factoryName="JAR Application">
+    <option name="JAR_PATH" value="$PROJECT_DIR$/Final_project/webservice/target/library-webservice-1.0.0.jar" />
+    <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+    <option name="PROGRAM_PARAMETERS" value="--server.port=8090" />
+    <method v="2" />
+  </configuration>
+</component>

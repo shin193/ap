@@ -24,7 +24,7 @@ public class LibrarianManager {
 
 
     private void addDefaultLibrarian() {
-        Librarian defaultLibrarian = new Librarian("abc", "123456", "Default Librarian");
+        Librarian defaultLibrarian = new Librarian("abc", Passwords.hash("123456"), "Default Librarian");
         librarians.add(defaultLibrarian);
         Database.saveLibrarians(librarians);
     }
@@ -35,7 +35,7 @@ public class LibrarianManager {
 
     public Librarian authenticateLibrarian(String username, String password) {
         return librarians.stream()
-                .filter(l -> l.getUsername().equals(username) && l.getPassword().equals(password))
+                .filter(l -> l.getUsername().equals(username) && Passwords.matches(password, l.getPassword()))
                 .findFirst()
                 .orElse(null);
     }
@@ -45,7 +45,7 @@ public class LibrarianManager {
             System.out.println("Username already taken!");
             return;
         }
-        Librarian newLibrarian = new Librarian(username, password, name);
+        Librarian newLibrarian = new Librarian(username, Passwords.hash(password), name);
         librarians.add(newLibrarian);
         Database.saveLibrarians(librarians);
         System.out.println("Librarian added successfully.");
@@ -58,7 +58,7 @@ public class LibrarianManager {
     public void editLibrarianPassword(Librarian currentlibrarian) {
         System.out.println("Enter your new password: ");
         String newPassword = sc.nextLine();
-        currentlibrarian.setPassword(newPassword);
+        currentlibrarian.setPassword(Passwords.hash(newPassword));
         Database.saveLibrarians(librarians);
         System.out.println("Your password has been changed.");
     }

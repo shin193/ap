@@ -22,7 +22,8 @@ import java.util.List;
  * single lightweight database file: library.db
  */
 public class Database {
-    private static final String DB_URL = "jdbc:sqlite:library.db";
+    private static final String DB_PATH = System.getProperty("library.db.path", "library.db");
+    private static final String DB_URL = "jdbc:sqlite:" + DB_PATH;
 
     static {
         try {
@@ -287,7 +288,7 @@ public class Database {
 
     @SuppressWarnings("unchecked")
     private static void migrateLegacyStudents() {
-        File legacy = new File("students.dat");
+        File legacy = legacyFile("students.dat");
         if (!legacy.exists() || !isTableEmpty("students")) {
             return;
         }
@@ -306,7 +307,7 @@ public class Database {
 
     @SuppressWarnings("unchecked")
     private static void migrateLegacyBooks() {
-        File legacy = new File("Books.dat");
+        File legacy = legacyFile("Books.dat");
         if (!legacy.exists() || !isTableEmpty("books")) {
             return;
         }
@@ -325,7 +326,7 @@ public class Database {
 
     @SuppressWarnings("unchecked")
     private static void migrateLegacyLibrarians() {
-        File legacy = new File("librarians.dat");
+        File legacy = legacyFile("librarians.dat");
         if (!legacy.exists() || !isTableEmpty("librarians")) {
             return;
         }
@@ -343,7 +344,7 @@ public class Database {
     }
 
     private static void migrateLegacyManager() {
-        File legacy = new File("manager.dat");
+        File legacy = legacyFile("manager.dat");
         if (!legacy.exists() || !isTableEmpty("manager")) {
             return;
         }
@@ -377,6 +378,10 @@ public class Database {
             System.err.println("Data imported, but could not rename " + legacy +
                     "; original file preserved: " + e.getMessage());
         }
+    }
+
+    private static File legacyFile(String name) {
+        return new File(new File(DB_PATH).getAbsoluteFile().getParentFile(), name);
     }
 
     private static void setBoolean(PreparedStatement ps, int index, boolean value) throws SQLException {

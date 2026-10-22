@@ -19,12 +19,12 @@ public class ManagerManager {
     }
 
     private void createDefaultManager() {
-        manager = new Manager("ADMIN", "1111", "System Administrator");
+        manager = new Manager("ADMIN", Passwords.hash("1111"), "System Administrator");
         Database.saveManager(manager);
     }
 
     public Manager authenticateManager(String username, String password) {
-        if (manager != null && manager.getUsername().equals(username) && manager.getPassword().equals(password)) {
+        if (manager != null && manager.getUsername().equals(username) && Passwords.matches(password, manager.getPassword())) {
             return manager;
         }
         return null;
@@ -33,7 +33,7 @@ public class ManagerManager {
     public void editManagerPassword(Manager currentManager) {
         System.out.println("Enter your new password: ");
         String newPassword = sc.nextLine();
-        currentManager.setPassword(newPassword);
+        currentManager.setPassword(Passwords.hash(newPassword));
         Database.saveManager(currentManager);
         System.out.println("Your password has been changed.");
     }
